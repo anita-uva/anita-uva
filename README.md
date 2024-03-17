@@ -1,5 +1,4 @@
-### For the sake of Science
-
+### A study from January to July 2020 shows attitudes toward the Covid Vaccination
 
 https://github.com/anita-uva/anita-uva/assets/77550558/71bd8fda-fa23-4952-9d2d-20bd8eb5d458.mp4
 
