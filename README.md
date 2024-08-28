@@ -2,7 +2,8 @@
 
 <dl>
 <dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
-<dd>January 2021 through July 2021; Attitudes toward the Covid Vaccination</dd>
+<dd>January 2021 through July 2021</dd>
+<dd>Attitudes toward the Covid Vaccination</dd>
 </dl>
 
 The COVID vaccine became available during the first quarter of 2021.  As the vaccine was distributed, first to those with the highest risk, then to the oldest and successively younger individuals, the Household Pulse Survey captured the reasons for those not getting vaccinations.  The total number of unvaccinated people drops dramatically through the months of the study.  As the overall numbers drop, the reasons given for remaining unvaccinated start to shift.  
