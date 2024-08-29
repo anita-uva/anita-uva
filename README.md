@@ -78,12 +78,12 @@ cursor.executescript(dat.data.decode("utf-8"))
 ## Commit Changes
 conn.commit()
 ```
-</dl>
+
 <dl>
 <dt>Review the code where this file is used</dt> 
 <dd>Please use the browser back button to return to this portfolio</dd>
-<dd>[Freight Marketplace Code](./Freight_Marketplace.html)</dd>
 </dl>
+[Freight Marketplace Code](./Freight_Marketplace.html)
 
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
