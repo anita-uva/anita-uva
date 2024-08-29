@@ -34,6 +34,10 @@ Notice, as the vaccination is distributed, people begin to feel less anxious, ov
 
 #### The resulting cleaned data file, ready to be inserted into a database.
 <img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9">
+```sed
+cat Shipments\ 2021.csv.orig | sed '1d' | tr -d '\r' |  awk 'BEGIN { FS = ",";OFS="," } ; {split($2,d," ");split(d[1],shd,"/"); print $1, "20"shd[3]"-"shd[2]"-"shd[1], $3, $4, $5, $8, $9, $10, $15, $16, $17, $18, $19, $28 }' |  sed s/\,/\"\,\"/g |  awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
+
+```
 
 #### I used python and sqlite3 to get the file from github, then insert the cleaned data into a newly created `shipments` table.
 ```python
@@ -45,9 +49,6 @@ else:
 
 ## Read Shipments Data
 dat = gitread.request("GET", shipments_dat)
-
-## Print the file contents so that we understand what has been done
-## print(dat.data.decode("utf-8"))
 
 ## The INSERT statements are contained in the file because we have alot of data 
 cursor.executescript(dat.data.decode("utf-8"))
