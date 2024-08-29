@@ -32,12 +32,17 @@ The shipments data is part of a slightly larger project where I converted flat d
 #### Original File, before cleaning
 <img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1">
 
-#### I use sed and awk to clean the data at the command line.
+#### I use sed and awk to clean the data at the command line.  This is a one-liner, but it is modified to better fit the boundaries of this presentation space.
 <!--
 <img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
 -->
 ```
-cat Shipments\ 2021.csv.orig | sed '1d' | tr -d '\r' |  awk 'BEGIN { FS = ",";OFS="," } ; {split($2,d," ");split(d[1],shd,"/"); print $1, "20"shd[3]"-"shd[2]"-"shd[1], $3, $4, $5, $8, $9, $10, $15, $16, $17, $18, $19, $28 }' |  sed s/\,/\"\,\"/g |  awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
+cat Shipments\ 2021.csv.orig |
+sed '1d' | tr -d '\r' |
+awk 'BEGIN { FS = ",";OFS="," } ; {split($2,d," ");split(d[1],shd,"/");
+print $1, "20"shd[3]"-"shd[2]"-"shd[1], $3, $4, $5, $8, $9, $10, $15, $16, $17, $18, $19, $28 }' |
+sed s/\,/\"\,\"/g |
+awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
 ```
 
 #### The resulting cleaned data file, ready to be inserted into a database.
