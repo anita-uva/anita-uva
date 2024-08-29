@@ -21,7 +21,41 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 
 <img width="788" alt="MentalHealth-NewsLinePlot" src="https://github.com/user-attachments/assets/7d73685f-036e-48a8-b8bc-1c6d706be3c9">
 
- Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  We also see people on edge during the time with notable reactions to destabilizing news.
+Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  We also see people on edge, with notable reactions to destabilizing news.
+
+## Data Cleaning and Preparation
+### Shipments Data
+Original File, before cleaning
+<img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1">
+
+Here, I use sed and awk to clean the data at the command line.
+<img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
+
+Resulting cleaned data file, ready to be inserted into a database.
+<img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9">
+
+Here I used sqlite3 to insert the cleaned data into a newly created `shipments` table.
+```python
+## Shipments Data file is stored in github
+if getEntireDatabase is True:
+  shipments_dat = "https://raw.githubusercontent.com/anita-uva/Freight-Marketplace/main/prod/shipments.inserts.txt?token=ASPVHXTCQAXVDA5UOXNSXNLBB5CAM"
+else:
+  shipments_dat = "https://raw.githubusercontent.com/anita-uva/Freight-Marketplace/main/poc/shipments.poc.inserts.txt?token=ASPVHXTEANVMPLIHMVRW6WTBB24IU"
+
+## Read Shipments Data
+dat = gitread.request("GET", shipments_dat)
+
+## Print the file contents so that we understand what has been done
+## print(dat.data.decode("utf-8"))
+
+## The INSERT statements are contained in the file because we have alot of data 
+cursor.executescript(dat.data.decode("utf-8"))
+
+## Commit Changes
+conn.commit()
+
+```
+
 
 <!--
 **anita-uva/anita-uva** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
