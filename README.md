@@ -30,13 +30,17 @@ I am particularly interested in Data Cleaning and preparation.  Here are a coupl
 The shipments data is part of a slightly larger project where I converted flat data files into a relational database.
 
 <dl>
-<dt>Original File, before cleaning</dt>
+<dt>This is the original file, before cleaning</dt>
+<dd>Right click and open in a new tab increase the size</dd>
 <dd><img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1"></dd>
 </dl>
-<img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1">
 
-#### I use sed and awk to clean the data at the command line.  This is a one-liner, but it is modified to better fit the boundaries of this presentation space.
+<dl>
+<dt>I used sed and awk to clean the data at the command line.</dt>
+<dd>This is a one-liner, but it is modified to better fit the boundaries of this presentation space.</dd>
+</dl>
 <!--
+In case I need the url again for sed and awk command line pic; this has been replaced by a code snippet
 <img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
 -->
 ```
@@ -48,12 +52,17 @@ sed s/\,/\"\,\"/g |
 awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
 ```
 
-#### The resulting cleaned data file, ready to be inserted into a database.
-<img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9">
+<dl>
+<dt>The resulting cleaned data file of Shipments</dt>
+<dd>This has been created as a script, ready to be inserted into the database.  The file was uploaded to github, with other script files, to create a standardized repository for the data files.</dd>
+<dd><img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9"></dd>
+</dl>
 
+<dl>
+<dt>I used <mark>python and sqlite3</mark> to create a repeatable and scalable process to load and reload the database.</dt> 
+<dd></dd>
+</dl>
 
-
-#### I used python and sqlite3 to create a repeatable and scalable process for getting cleaned files from github, then inserting the cleaned data into newly created tables.
 ```python
 ## Shipments Data file is stored in github
 if getEntireDatabase is True:
@@ -69,9 +78,8 @@ cursor.executescript(dat.data.decode("utf-8"))
 
 ## Commit Changes
 conn.commit()
-
 ```
-
+Place holder for full project.
 
 <!--
 **anita-uva/anita-uva** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
