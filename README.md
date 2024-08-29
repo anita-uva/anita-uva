@@ -29,7 +29,10 @@ I am particularly interested in Data Cleaning and preparation.  Here are a coupl
 ### Shipments Data
 The shipments data is part of a slightly larger project where I converted flat data files into a relational database.
 
-#### Original File, before cleaning
+<dl>
+<dt>Original File, before cleaning</dt>
+<dd><img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1"></dd>
+</dl>
 <img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1">
 
 #### I use sed and awk to clean the data at the command line.  This is a one-liner, but it is modified to better fit the boundaries of this presentation space.
@@ -50,7 +53,7 @@ awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments
 
 
 
-#### I used python and sqlite3 to get the file from github, then insert the cleaned data into a newly created `shipments` table.
+#### I used python and sqlite3 to create a repeatable and scalable process for getting cleaned files from github, then inserting the cleaned data into newly created tables.
 ```python
 ## Shipments Data file is stored in github
 if getEntireDatabase is True:
