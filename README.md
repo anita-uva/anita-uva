@@ -24,20 +24,26 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  We also see people on edge, with notable reactions to destabilizing news.
 
 ## Data Cleaning and Preparation
+I am particularly interested in Data Cleaning and preparation.  Here are a couple of examples.
+
 ### Shipments Data
+The shipments data is part of a slightly larger project where I converted flat data files into a relational database.
 
 #### Original File, before cleaning
 <img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1">
 
 #### I use sed and awk to clean the data at the command line.
+<!--
 <img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
+-->
+```
+cat Shipments\ 2021.csv.orig | sed '1d' | tr -d '\r' |  awk 'BEGIN { FS = ",";OFS="," } ; {split($2,d," ");split(d[1],shd,"/"); print $1, "20"shd[3]"-"shd[2]"-"shd[1], $3, $4, $5, $8, $9, $10, $15, $16, $17, $18, $19, $28 }' |  sed s/\,/\"\,\"/g |  awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
+```
 
 #### The resulting cleaned data file, ready to be inserted into a database.
 <img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9">
-```sed
-cat Shipments\ 2021.csv.orig | sed '1d' | tr -d '\r' |  awk 'BEGIN { FS = ",";OFS="," } ; {split($2,d," ");split(d[1],shd,"/"); print $1, "20"shd[3]"-"shd[2]"-"shd[1], $3, $4, $5, $8, $9, $10, $15, $16, $17, $18, $19, $28 }' |  sed s/\,/\"\,\"/g |  awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
 
-```
+
 
 #### I used python and sqlite3 to get the file from github, then insert the cleaned data into a newly created `shipments` table.
 ```python
