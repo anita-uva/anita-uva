@@ -85,8 +85,8 @@ conn.commit()
 </dl>
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
-### Different Data
-Different data explanation
+### Scraping Data
+Beautiful Soup.
 
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
