@@ -36,13 +36,9 @@ The shipments data is part of a slightly larger project where I converted flat d
 </dl>
 
 <dl>
-<dt>I used sed and awk to clean the data at the command line.</dt>
-<dd>This is a one-liner, but it is modified to better fit the boundaries of this presentation space.</dd>
-</dl>
-<!--
-In case I need the url again for sed and awk command line pic; this has been replaced by a code snippet
-<img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
--->
+<dt>I used <mark>sed and awk</mark> to clean the data at the command line.</dt>
+<dd>This is a one-liner, but it is modified into multiple lines to better fit the boundaries of this presentation space.</dd>
+  <dd>
 ```
 cat Shipments\ 2021.csv.orig |
 sed '1d' | tr -d '\r' |
@@ -51,6 +47,13 @@ print $1, "20"shd[3]"-"shd[2]"-"shd[1], $3, $4, $5, $8, $9, $10, $15, $16, $17, 
 sed s/\,/\"\,\"/g |
 awk -FS=, '{ print "INSERT INTO shipments VALUES(" "\""$0"\"" ")" }' > shipments.inserts.txt
 ```
+    </dd>
+</dl>
+<!--
+In case I need the url again for sed and awk command line pic; this has been replaced by a code snippet
+<img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
+-->
+
 
 <dl>
 <dt>The resulting cleaned data file of Shipments</dt>
