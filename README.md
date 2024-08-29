@@ -52,13 +52,11 @@ In case I need the url again for sed and awk command line pic; this has been rep
 <img width="1103" alt="Shipments_SedAwk" src="https://github.com/user-attachments/assets/a1fc9654-830e-4795-b513-91419b55226e">
 -->
 
-
 <dl>
 <dt>The resulting cleaned data file of Shipments</dt>
 <dd>This has been created as a script, ready to be inserted into the database.  The file was uploaded to github, with other script files, to create a standardized repository for the data files.</dd>
 <dd><img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9"></dd>
 </dl>
-
 <dl>
 <dt>I used <mark>python and sqlite3</mark> to create a repeatable and scalable process to load and reload the database.</dt> 
 <dd></dd>
@@ -80,8 +78,12 @@ cursor.executescript(dat.data.decode("utf-8"))
 ## Commit Changes
 conn.commit()
 ```
-
-[Freight Marketplace Code](./Freight_Marketplace.html)
+</dl>
+<dl>
+<dt>Review the code where this file is used</dt> 
+<dd>Please use the browser back button to return to this portfolio</dd>
+<dd>[Freight Marketplace Code](./Freight_Marketplace.html)</dd>
+</dl>
 
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
