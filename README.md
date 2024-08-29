@@ -25,6 +25,7 @@ Notice, as the vaccination is distributed, people begin to feel less anxious, ov
 
 ## Data Cleaning and Preparation
 ### Shipments Data
+
 Original File, before cleaning
 <img width="1250" alt="Shipments_Before" src="https://github.com/user-attachments/assets/1096923c-4018-48da-b9ec-35ef44b732f1">
 
@@ -34,7 +35,7 @@ Here, I use sed and awk to clean the data at the command line.
 Resulting cleaned data file, ready to be inserted into a database.
 <img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9">
 
-Here I used sqlite3 to insert the cleaned data into a newly created `shipments` table.
+Here I used python and sqlite3 to insert the cleaned data into a newly created `shipments` table.
 ```python
 ## Shipments Data file is stored in github
 if getEntireDatabase is True:
