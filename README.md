@@ -90,10 +90,10 @@ conn.commit()
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
 ### Web Scraping:  Beautiful Soup simple example
-Here is a short example of web scraping wiht beautiful soup
+Here is a short example of web scraping with Beautiful Soup.
 
 <dl>
-<dt>Web Scraping/dt> 
+<dt>Web Scraping</dt> 
 <dd>Beautiful Soup simple example</dd>
 </dl>
 
