@@ -3,7 +3,7 @@
 * TOC
 {:toc}
 
-## Survey Data Handling
+## Data Visualization
 <dl>
 <dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
 <dd>Attitudes toward the Covid Vaccination</dd>
@@ -27,7 +27,7 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 
 Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  But we also see people on edge, with notable reactions to potentially destabilizing news.
 
-## Data Cleaning and Preparation
+## Data Cleaning, Collection & Exploration
 I am particularly interested in Data Cleaning and Exploratory Data Analysis.
 
 ### Command Line Data Transform:  Shipments Data
@@ -89,7 +89,7 @@ conn.commit()
 </dl>
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
-### Web Scraping:  Beautiful Soup simple example
+### Web Scraping / Data Collection:  Beautiful Soup simple example
 Here is a short example of web scraping with Beautiful Soup.
 
 <dl>
