@@ -17,7 +17,7 @@ The top 2 reasons never shift:  People were solidly concerned about side effects
 <dd>Visual Summary for Measurement of Mental Health</dd>
 </dl>
 
-The survey asked respondents to rate their feelings of Anxiety on a scale from 1 to 5.  This is the average response from January 2021 through July 2021. 
+The survey asked respondents to rate their feelings of Anxiety on a scale from 1 to 5.  This is the sum response of all survey participants, regardless of personal vaccination status, from January 2021 through July 2021. 
 
 <img width="788" alt="MentalHealth-NewsLinePlot" src="https://github.com/user-attachments/assets/7d73685f-036e-48a8-b8bc-1c6d706be3c9">
 
@@ -26,7 +26,7 @@ Notice, as the vaccination is distributed, people begin to feel less anxious, ov
 ## Data Cleaning and Preparation
 I am particularly interested in Data Cleaning and preparation.  Here are a couple of examples.
 
-### Shipments Data
+### Command Line Data Transform:  Shipments Data
 The shipments data is part of a slightly larger project where I converted flat data files into a relational database.
 
 <dl>
@@ -58,7 +58,7 @@ In case I need the url again for sed and awk command line pic; this has been rep
 <dd><img width="1028" alt="Shipments_After" src="https://github.com/user-attachments/assets/2d868df8-28b5-4595-a578-dd5e4556f6a9"></dd>
 </dl>
 <dl>
-<dt>I used <mark>python and sqlite3</mark> to create a repeatable and scalable process to load and reload the database.</dt> 
+<dt>I used <mark>python and sqlite3</mark> to create a <mark>repeatable and scalable process</mark> to load and reload the database.</dt> 
 <dd></dd>
 </dl>
 
@@ -85,9 +85,10 @@ conn.commit()
 </dl>
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
-### Scraping Data
+### Web Scraping:  News Articles
 Beautiful Soup.
 
+### Exploratory Data Analysis: News Articles?
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
 -->
