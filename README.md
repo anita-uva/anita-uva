@@ -3,6 +3,7 @@
 * TOC
 {:toc}
 
+
 ## Data Visualization
 <dl>
 <dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
@@ -27,8 +28,9 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 
 Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  But we also see people on edge, with notable reactions to potentially destabilizing news.
 
-## Data Cleaning, Collection & Exploration
-I am particularly interested in Data Cleaning and Exploratory Data Analysis.
+
+## Data Collection and Cleaning
+I am particularly interested in Data Cleaning, Collection and Exploratory Data Analysis.
 
 ### Command Line Data Transform:  Shipments Data
 The shipments data is part of a slightly larger project where I converted flat data files into a relational database.
@@ -153,7 +155,8 @@ Maybe some python with pandas
 Exploratory Data Analysis goes hand in hand with Data Collection and Cleaning.
 
 ### Feature Reduction
-### Exploration
+### Summary Statistics
+### Correlation
 
 ## Machine Learning
 
