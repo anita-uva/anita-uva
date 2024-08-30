@@ -89,8 +89,13 @@ conn.commit()
 </dl>
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
-### Web Scraping:  News Articles
+### Web Scraping:  Beautiful Soup simple example
 Here is a short example of web scraping wiht beautiful soup
+
+<dl>
+<dt>Web Scraping/dt> 
+<dd>Beautiful Soup simple example</dd>
+</dl>
 
 ```python
 ## Set the user-agent string
