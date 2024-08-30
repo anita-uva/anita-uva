@@ -1,5 +1,8 @@
 # Data Science Highlights
 
+* TOC
+{:toc}
+
 <dl>
 <dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
 <dd>Attitudes toward the Covid Vaccination</dd>
