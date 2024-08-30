@@ -146,7 +146,17 @@ def books_from_page(url):
 books_from_page(base_url)
 ```
 
-### Exploratory Data Analysis: Feature Reduction
+### Data Transformation
+Maybe some python with pandas
+
+## Exploratory Data Analysis
+Exploratory Data Analysis goes hand in hand with Data Collection and Cleaning.
+
+### Feature Reduction
+### Exploration
+
+## Machine Learning
+
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
 -->
