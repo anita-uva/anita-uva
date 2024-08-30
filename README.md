@@ -25,10 +25,10 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 
 <img width="788" alt="MentalHealth-NewsLinePlot" src="https://github.com/user-attachments/assets/7d73685f-036e-48a8-b8bc-1c6d706be3c9">
 
-Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  We also see people on edge, with notable reactions to destabilizing news.
+Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  But we also see people on edge, with notable reactions to potentially destabilizing news.
 
 ## Data Cleaning and Preparation
-I am particularly interested in Data Cleaning and preparation.  Here are a couple of examples.
+I am particularly interested in Data Cleaning and Exploratory Data Analysis.
 
 ### Command Line Data Transform:  Shipments Data
 The shipments data is part of a slightly larger project where I converted flat data files into a relational database.
@@ -90,9 +90,58 @@ conn.commit()
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
 ### Web Scraping:  News Articles
-Beautiful Soup.
+Here is a short example of web scraping wiht beautiful soup
 
-### Exploratory Data Analysis: News Articles?
+```python
+## Set the user-agent string
+user_agent = {'User-agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.87 Safari/1.0 (agt@mailer.com)'}
+
+## Set the base url
+base_url = 'http://books.toscrape.com/'
+
+## Check for robots.txt
+robots = requests.get(base_url+"robots.txt", headers = user_agent)
+if robots.status_code == 404:
+    print('This site does not have a robots.txt\n\n{}'.format(robots))
+else:
+    print(robots.text)
+
+def books_from_page(url):
+
+    global user_agent
+    page_of_books = pd.DataFrame()
+    
+    ## Get the starting page
+    page = requests.get(url, headers = user_agent)
+
+    ## Make it useful in python
+    books_raw = BeautifulSoup(page.text, 'html')
+
+    ## Parse out titles
+    title_list = [x.h3.a['title'] for x in books_raw.findChildren('article')]
+    
+    ## Parse out Prices and remove currency symbol
+    prices = [x.find_all('div')[1].p.text.replace('Â£', '') for x in books_raw.findChildren('article')]
+
+    ## Star Rating for each book
+    star_rating = [x.p['class'][1] for x in books_raw.findChildren('article')]
+    
+    ## Book Cover Image URL
+    image_url = [x.div.a.img['src'] for x in books_raw.findChildren('article')]
+    
+    ## Put the data together
+    data_for_cols = list(zip(title_list, prices, star_rating, image_url))
+
+    ## Place it in a nicely formatted Datafame
+    page_of_books = pd.DataFrame(data_for_cols, columns=['Title', 'Price', 'Rating', 'Image URL'])
+    
+    return page_of_books
+
+## Run books from page function
+books_from_page(base_url)
+```
+
+### Exploratory Data Analysis: Feature Reduction
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
 -->
