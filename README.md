@@ -92,7 +92,7 @@ conn.commit()
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
 ### Web Scraping / Data Collection:  Beautiful Soup simple example
-Here is a short example of web scraping with Beautiful Soup.
+Here is a short example of web scraping with Beautiful Soup.  I am also good at obtaining data using APIs and Database Clients.  I believe I can collect data in any format that is legally available.
 
 <dl>
 <dt>Web Scraping</dt> 
@@ -147,9 +147,83 @@ def books_from_page(url):
 ## Run books from page function
 books_from_page(base_url)
 ```
+<dl>
+<dt>Web Scraping Result</dt> 
+<dd>The result is nicely formatted local data from http://books.toscrape.com/</dd>
+</dl>
+
+<img width="793" alt="Screenshot 2024-09-03 at 11 34 57 AM" src="https://github.com/user-attachments/assets/659d8ea3-03b1-4f4f-98df-b55f568f385d">
 
 ### Data Transformation
-Maybe some python with pandas
+Data transformation to useful, human readable information. 
+
+<dl>
+<dt>Transform columns from numeric codes</dt> 
+<dd>Data is only useful when we can interpret the result</dd>
+</dl>
+
+```python
+
+## Define a function to map values for columns WD1 - WD7
+def set_pct_values(np_series_vals):
+
+    myarr = np_series_vals.unique()
+
+    lth = [str(y) for y in range(0,46)]
+    aeh = [str(y) for y in range(46,55)]
+    mth = [str(y) for y in range(55,101)]
+
+    valdict = {'997': "Don't know", '998': "Refusal", '999': "Blank\Invalid"}
+
+    for x in myarr:
+        if x in valdict.keys():
+            continue
+        
+        if str(x) in lth:
+            valdict[x]= 'Less Than Half'
+        elif str(x) in mth:
+            valdict[x] = 'More Than Half'
+        elif str(x) in aeh:
+            valdict[x] = 'About Half'
+
+    return valdict
+
+## Build the multi-column replacement map
+replace_map = {'org_profit_or_gov':
+                   {'1': 'For profit, public','2': 'For profit, private','3': 'Non-profit',
+                    '4': 'State or local government','5': 'Federal government',
+                    '6': 'Other','97': np.nan,'98': np.nan, '99': np.nan},
+               'health_coverage_offered':
+                   {'1': 'Full insurance coverage offered','2': 'Partial insurance coverage offered',
+                    '3': 'No insurance coverage offered','97': np.nan,'98': np.nan,'99': np.nan },
+               'emp_yoy_cost_increase':
+                   {'1':'Larger','2':'Smaller','3':'About the same','96': np.nan,
+                    '97': np.nan,'98': np.nan,'99': np.nan},
+               'emp_parttime_offer':
+                   {'1':'Yes','2':'No','97': np.nan,'98': np.nan,'99': np.nan},
+               'emp_health_ed_offer':
+                   {'1':'Yes','2':'No','97': np.nan,'98': np.nan },
+               'emp_wfh_offer':
+                   {'1':'Yes','2':'No','97': np.nan,'98': np.nan,'99': np.nan},
+               
+               'emp_demographic_lt30':      set_pct_values(workingdf['emp_demographic_lt30']),
+               'emp_demographic_gt59':      set_pct_values(workingdf['emp_demographic_gt59']),
+               'emp_demographic_female':    set_pct_values(workingdf['emp_demographic_female']),
+               'emp_demographic_hourly':    set_pct_values(workingdf['emp_demographic_hourly']),
+               'emp_demographic_notday':    set_pct_values(workingdf['emp_demographic_notday']),
+               'emp_demographic_notoffice': set_pct_values(workingdf['emp_demographic_notoffice']),
+               'emp_demographic_union':     set_pct_values(workingdf['emp_demographic_union']),
+               'emp_turnover_annual':       set_pct_values(workingdf['emp_turnover_annual'])
+              }
+
+## Replace everythig in one call, set some values as missing
+workingdf = workingdf.replace(replace_map)
+
+## Show the values are used as expected 
+workingdf.sample(15).T
+```
+<img width="742" alt="Screenshot 2024-09-03 at 11 50 28 AM" src="https://github.com/user-attachments/assets/13dc1755-5bef-4646-8abf-d8a4efba5422">
+
 
 ## Exploratory Data Analysis
 Exploratory Data Analysis goes hand in hand with Data Collection and Cleaning.
