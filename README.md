@@ -91,7 +91,7 @@ conn.commit()
 </dl>
 [Freight Marketplace Code](./Freight_Marketplace.html)
 
-### Web Scraping / Data Collection:  Beautiful Soup simple example
+### Web Scraping:  Beautiful Soup simple example
 Here is a short example of web scraping with Beautiful Soup.  I am also good at obtaining data using APIs and Database Clients.  I believe I can collect data in any format that is legally available.
 
 <dl>
@@ -154,12 +154,87 @@ books_from_page(base_url)
 
 <img width="793" alt="Screenshot 2024-09-03 at 11 34 57 AM" src="https://github.com/user-attachments/assets/659d8ea3-03b1-4f4f-98df-b55f568f385d">
 
+### API Data Collection
+This short example uses python and pandas for querying over endpoints and for using a library as a client interaction to collect data from genius.com.
+
+<dl>
+<dt>API</dt> 
+<dd>Data Collection through endpoints or libraries</dd>
+</dl>
+
+```python
+## Establish root and enpoint for the search API
+root = 'https://api.genius.com'
+endpoint = '/search'
+
+## Set up the variables using access_token as a parameter
+searchme = { 'q' : 'Bob Dylan', 'access_token' : ACCESS_TOKEN }
+
+## Use requests to query endpoint
+r = requests.get(root+endpoint, params=searchme )
+
+## Create a json friendly variable
+dylan_json = json.loads(r.text)
+
+# Use the JSON Structure to find the dylan url; break these up to export to PDF
+dylan_url = \
+    dylan_json['response']['hits'][0]['result']['primary_artist']['api_path']
+
+print('Bob Dylan\'s API endpoint \n{}' \
+      .format(root+dylan_url))
+
+## Use the Endpoint
+
+## Prefer authorization header instead of access_token in the url
+authtoken = { 'Authorization' : str('Bearer '+ACCESS_TOKEN) }
+
+## finally ran across a sort parameter, hooray...
+params = {'sort' : 'popularity'}
+r = requests.get(root+dylan_url+'/songs', headers=authtoken, params=params )
+
+## It gives us 20 without further wrangling, so just load it up
+top20songs = json.loads(r.text)
+
+## Use Normalize to break down nested dicts
+pd.json_normalize(top20songs, record_path=['response', 'songs'])
+
+## Use the Library
+
+## Check for existing library installation
+hm = !pip show lyricsgenius
+
+## if not installed, perform install
+if 'lyricsgenius' not in hm[0]:
+    !pip install lyricsgenius
+
+import lyricsgenius
+genius = lyricsgenius.Genius(ACCESS_TOKEN)
+
+# We are given the song name and artist name
+target_song   = 'Tangled Up in Blue'
+target_artist = 'Bob Dylan'
+
+# Because of API read-timed-out errors I am looking for the song directly
+songs = genius.search_songs(target_song + ' ' + target_artist)
+
+# The API returns the song we want as the first item
+tuib_id = [x['result']['id'] for x in songs['hits']][0]
+
+# Using Song ID
+tuib_lyrics = genius.lyrics(tuib_id)
+
+# Make it pretty
+print(tuib_lyrics)
+```
+<img width="382" alt="Screenshot 2024-09-03 at 4 03 58 PM" src="https://github.com/user-attachments/assets/63db7d7d-2eac-4ea8-a430-f8cee7181e15">
+
+
 ### Data Transformation
 Data transformation to useful, human readable information. 
 
 <dl>
 <dt>Transform columns from numeric codes</dt> 
-<dd>Data is only useful when we can interpret the result</dd>
+<dd>Data is only useful when we can understand the what the values represent.</dd>
 </dl>
 
 ```python
@@ -178,7 +253,7 @@ def set_pct_values(np_series_vals):
     for x in myarr:
         if x in valdict.keys():
             continue
-        
+        `
         if str(x) in lth:
             valdict[x]= 'Less Than Half'
         elif str(x) in mth:
@@ -224,9 +299,10 @@ workingdf.sample(15).T
 ```
 <img width="742" alt="Screenshot 2024-09-03 at 11 50 28 AM" src="https://github.com/user-attachments/assets/13dc1755-5bef-4646-8abf-d8a4efba5422">
 
-
 ## Exploratory Data Analysis
-Exploratory Data Analysis goes hand in hand with Data Collection and Cleaning.
+Some of my favorite work is EDA.  I love to discover what the data has to say!
+
+
 
 ### Feature Reduction
 ### Summary Statistics
