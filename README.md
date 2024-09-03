@@ -1,4 +1,4 @@
-# Data Science Highlights
+# Data Science and Analytics
 
 * TOC
 {:toc}
@@ -305,8 +305,66 @@ Some of my favorite work is EDA.  I love to discover what the data has to say!
 
 
 ### Feature Reduction
+#### LDA
+#### Chi-Squared feature selection in pyspark
+For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  
+
+Here I show the best predictor for getting a covid vaccine in 2021 (when the vaccine was initially released) is simply the week of the year.  Because in that year, the more widely available the vaccine became, the more people were actually getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
+
+```python
+from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
+from pyspark.ml import Pipeline
+
+## Set the number of selected features, this will be used throught the entire investigation
+numFeatures = 10
+
+# Set StringOrderType because the default of frequencyDesc labels VACC backwards 
+labelIndexer = StringIndexer(inputCol="VACC", outputCol="indexedLabel", stringOrderType='frequencyAsc')
+
+assembler = VectorAssembler(
+                inputCols = allCols, 
+                outputCol="features",
+                handleInvalid='skip')
+
+featureIndexer = VectorIndexer(inputCol="features", outputCol="indexedFeatures", handleInvalid='skip')
+
+selector  = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
+
+pipeline = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
+
+chisq_model = pipeline.fit(selector_df)
+
+# use the selected predictors throughout the investigation
+colList = [allCols[x] for x in chisq_model.stages[-1].selectedFeatures]
+
+# Format the selected features so that they are neatly presented
+pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_caption('Chi-Squared feature selection')
+```
+<img width="160" alt="Screenshot 2024-09-03 at 4 50 47 PM" src="https://github.com/user-attachments/assets/f5498edf-b685-495a-9847-82c376c79344">
+
+
+<dl>
+<dt>Feature Importance</dt> 
+<dd>Feature Importance is plotted from the Gradient Boosted Trees Classifier.</dd>
+</dl>
+
+```python
+# Feature Importances
+vals = gbt_pipelineModel.stages[-1].featureImportances.indices
+arr = gbt_pipelineModel.stages[-1].featureImportances.toArray()
+
+pd.DataFrame([(colList[f],arr[f]) for f in vals], index=[colList[f] for f in vals])[[1]] \
+         .sort_values(by=1, ascending=True) \
+         .plot(kind='barh', title='Gradient Boosted Trees\nFeature Importances', legend=False)
+plt.show()
+```
+
+<img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
+
+
 ### Summary Statistics
 ### Correlation
+
 
 ## Machine Learning
 
