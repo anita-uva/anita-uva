@@ -307,9 +307,7 @@ Some of my favorite work is EDA.  I love to discover what the data has to say!
 ### Feature Reduction
 #### LDA
 #### Chi-Squared feature selection in pyspark
-For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  
-
-Here I show the best predictor for getting a covid vaccine in 2021 (when the vaccine was initially released) is simply the week of the year.  Because in that year, the more widely available the vaccine became, the more people were actually getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
+For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
 
 ```python
 from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
@@ -347,6 +345,8 @@ pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_ca
 <dt>Feature Importance</dt> 
 <dd>Feature Importance is plotted from the Gradient Boosted Trees Classifier.</dd>
 </dl>
+
+Here I show the best predictor for getting a covid vaccine in 2021 (when the vaccine was initially released) is simply the week of the year.  Because in that year, the more widely available the vaccine became, the more people were actually getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
 
 ```python
 # Feature Importances
