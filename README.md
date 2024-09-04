@@ -338,7 +338,7 @@ pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_ca
 
 <dl>
 <dt>Feature Importance</dt> 
-<dd>Feature Importance is plotted from the Gradient Boosted Trees Classifier.</dd>
+<dd>Feature Importance is plotted using the Gradient Boosted Trees Classifier.</dd>
 </dl>
 
 Here we see the best predictor for getting a covid vaccination in 2021 (when the vaccine was initially released) is simply the week of the year.  During that year, the more widely available the vaccine became, the more people were getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
@@ -359,7 +359,13 @@ plt.show()
 #### Latent Dirichlet Allocation (LDA) for Topic Modeling
 This example uses LDA for topic modeling, based on twitter data archives from the 2016 presidential election cycle.  The larger study compares real news to fake news as determined by the fact-checking website, Politifact.  This code snippet represents a dimensionality reduction effort for exploring topics.
 
-Because the dimensionality of the topic variable is assumed known and fixed in LDA, I created a repeatable process for LDA topic modeling which allowed rapid investigation of topics given various numbers of topics.
+Because the dimensionality of the topic variable is assumed known and fixed in LDA (i.e. it will not tell us the best number of topics), I created a repeatable process for LDA topic modeling which allows rapid investigation of topics given any combination of:
+
+* various numbers of topics
+* size of vocabulary
+* hello
+
+I centralized the variables so that the process is to change the values in one place and run the same code cell to see the result.
 
 ```python
 def dynamic_grid(n_topics):
@@ -397,7 +403,6 @@ def plot_word_topics(model, feature_names, n_top_words, title):
             
     fig, axes = plt.subplots(ax_rows, ax_cols, figsize=(30, num_topics+10), sharex=True)
     
-    ## This line to plt.show is almost verbatim copied from scikit-learn documentation
     ## https://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html
     
     axes = axes.flatten()
@@ -424,6 +429,7 @@ def plot_word_topics(model, feature_names, n_top_words, title):
     return(pd.concat(dfs))
 
 # This includes defaults, but they are not specifically meaningful
+# They are just a catch-all in the event something is missing. 
 def get_lda_word_model(corpus, 
                        min_df = 0.20, 
                        max_df = 0.80, 
@@ -460,19 +466,21 @@ min_df = 0.10 ## words used in only 10% of documents are too special, eliminate
 mylda_r, myvect_r, topics_r = get_lda_word_model(corpusr, min_df, max_df, n_vocab_size, n_topics, n_topic_size)
 ```
 <dl>
-<dt>Topic Grid</dt> 
-<dd>The result is a simplified process for reviewing and retrying any variation of vocabulary size, topics, and number of words per topic.</dd>
-  <dd>This shows topics 11-20 (reduced from 1-20 to save space) of a 20 topic investigation with 10 words per topic.</dd>
+<dt>Resulting Topic Grid</dt> 
+<dd>The result is a simplified process for reviewing and retrying any combination of vocabulary size, topics, and number of words per topic.</dd>
+  <dd>This shows topics 11-20 (cropped from 1-20 to save space) of a 20 topic investigation with 10 words per topic with a vocabulary of 1000 words.</dd>
 </dl>
 
 <img width="998" alt="Screenshot 2024-09-04 at 12 07 13 PM" src="https://github.com/user-attachments/assets/56586463-47b5-4a00-b609-3c665be28f78">
+
+
 
 
 ### Summary Statistics
 ### Correlation
 
 
-## Machine Learning
+## TODO: Machine Learning
 
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
