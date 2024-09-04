@@ -550,13 +550,87 @@ plt.title("Response Variable by Week")
 plt.legend(title='Vaccinated', labels=['No', 'Yes'], loc=2, bbox_to_anchor = (1,1))
 plt.show()
 ```
-
 <dl>
 <dt>Data Distribution Bar Chart</dt> 
-<dd>Notice how the distribution of this outcome variable changes as the week changes.  This indicates a time series data set, which will mean time series testing and models will need to be be considered.</dd>
+<dd>Notice how the distribution of this outcome variable changes as the week changes.  This indicates a time series data set, which will mean time series testing and models will need to be be pursued.</dd>
 </dl>
 
 <img width="628" alt="Screenshot 2024-09-04 at 2 38 20 PM" src="https://github.com/user-attachments/assets/cc76934b-31b2-4eb5-9fa3-b7e786617668">
+
+#### RoBERTa Sentiment Analysis as EDA
+In this snippet, I use a pre-trained RoBERTa model to classify article headlines and article text, separately, as Negative, Neutral, or Positive.  The dataset being processed by RoBERTa is comprised of articles that have been labeled by a bias of Left, Center, or Right.  The goal of this EDA step is to gain an understanding of negativity and positivity by bias.
+
+```python
+# load model and tokenizer
+
+## This pretrained model determines Labels: 0 -> Negative; 1 -> Neutral; 2 -> Positive
+## https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment
+
+roberta   = "cardiffnlp/twitter-roberta-base-sentiment"
+model     = AutoModelForSequenceClassification.from_pretrained(roberta)
+tokenizer = AutoTokenizer.from_pretrained(roberta)
+
+labels = ['Negative', 'Neutral', 'Positive']
+
+## Sentiment Analysis on Article Snippets (Descriptions)
+## Sentiment Analysis on Headlines
+for index, row in ad.iterrows():
+  snippet = getattr(row, "Description")
+
+  snippet_words = []
+
+  for word in snippet.split(' '):
+
+      if word.startswith('http'):
+          word = "http"
+      snippet_words.append(word)
+
+  snippet_proc = " ".join(snippet_words)
+  #print(snippet_proc)
+
+  encoded_snippet = tokenizer(snippet_proc, return_tensors='pt')
+  #print(encoded_snippet)
+
+  # sentiment analysis
+  output = model(encoded_snippet['input_ids'], encoded_snippet['attention_mask'])
+  #output = model(**encoded_snippet)
+
+  scores = output[0][0].detach().numpy()
+  ad.loc[index, ['negative']]  = scores[0]
+  ad.loc[index, ['neutral']]   = scores[1]
+  ad.loc[index, ['positive']]  = scores[2]
+  #print(scores)
+
+  scores = softmax(scores)
+  ad.loc[index, ['negative_pct']] = scores[0]
+  ad.loc[index, ['neutral_pct']]  = scores[1]
+  ad.loc[index, ['positive_pct']] = scores[2]
+  #print(scores)
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+myplot = hl[['Bias', 'negative_pct', 'positive_pct', 'neutral_pct']].copy()
+myplot = myplot.groupby('Bias').agg('mean')
+_ = myplot.plot(kind='bar', figsize=(20,5), title="Headlines", color=['burlywood', 'darkorange', 'bisque']).set_xticklabels(labels=myplot.index.unique(), rotation = 0)
+
+adplot = ad[['Bias', 'negative_pct', 'positive_pct', 'neutral_pct']].copy()
+adplot = adplot.groupby('Bias').agg('mean')
+_=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywood', 'darkorange', 'bisque']).set_xticklabels(labels=myplot.index.unique(), rotation = 0)
+```
+<dl>
+<dt>Sentiment Analysis with Bias</dt> 
+<dd>We see positivity is consistently the lowest sentiment, regardless of bias. And while it ranks much higher than positivity, negativity is always the second highest sentiment. Surprisingly, neutral is always the highest ranking sentiment for every bias.</dd>
+<dd>When comparing headlines and articles, we see that positive sentiment for headlines is always ranked below 10%, whereas articles exhibit more positivity (over 10% in every case) within the article text. It seems that headlines may be less positive than the article content.</dd>
+<dd>Articles classified as "Center" bias show less negativity in their headines and their article content. Maybe not surprisingly, the Left and Right extremes are more likely to exhibit negatvity in their headlines and articles than the more central classifications.</dd>
+<dd>The "Left" bias edges the "Right" bias with the most negatvity of any classification, in both headlines and article text.</dd>
+<dd>Center bias is narrowly the most likely to show positivity when comapred to all other biases.</dd>
+</dl>
+
+<img width="990" alt="Screenshot 2024-09-04 at 5 01 30 PM" src="https://github.com/user-attachments/assets/e315c498-ef8b-4e82-a476-792afc084051">
+
+
 
 #### Correlation
 
