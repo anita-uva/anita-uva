@@ -630,6 +630,7 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 
 <img width="990" alt="Screenshot 2024-09-04 at 5 01 30 PM" src="https://github.com/user-attachments/assets/e315c498-ef8b-4e82-a476-792afc084051">
 
+[Full Sentiment Analysis Code](./RoBERTa_Sentiment_Analysis.html)
 
 
 #### Correlation
