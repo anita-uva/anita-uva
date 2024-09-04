@@ -302,70 +302,19 @@ workingdf.sample(15).T
 ## Exploratory Data Analysis
 Some of my favorite work is improving the scalability and processes for EDA.  And I love to discover what the data has to say!
 
-
 ### Dimensionality Reduction & Feature Importance
-
-#### Chi-Squared feature selection in pyspark
-For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
-
-```python
-from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
-from pyspark.ml import Pipeline
-
-## Set the number of selected features, this will be used throught the entire investigation
-numFeatures = 10
-
-# Set StringOrderType because the default of frequencyDesc labels VACC backwards 
-labelIndexer = StringIndexer(inputCol="VACC", outputCol="indexedLabel", stringOrderType='frequencyAsc')
-
-assembler = VectorAssembler(
-                inputCols = allCols, 
-                outputCol="features",
-                handleInvalid='skip')
-
-featureIndexer = VectorIndexer(inputCol="features", outputCol="indexedFeatures", handleInvalid='skip')
-selector    = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
-pipeline    = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
-chisq_model = pipeline.fit(selector_df)
-
-# use the selected predictors throughout the investigation
-colList = [allCols[x] for x in chisq_model.stages[-1].selectedFeatures]
-
-# Format the selected features so that they are neatly presented
-pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_caption('Chi-Squared feature selection')
-```
-<img width="160" alt="Screenshot 2024-09-03 at 4 50 47 PM" src="https://github.com/user-attachments/assets/f5498edf-b685-495a-9847-82c376c79344">
-
-<dl>
-<dt>Feature Importance</dt> 
-<dd>Feature Importance is plotted using the Gradient Boosted Trees Classifier.</dd>
-</dl>
-
-Here we see the best predictor for getting a covid vaccination in 2021 (when the vaccine was initially released) is simply the week of the year.  During that year, the more widely available the vaccine became, the more people were getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
-
-```python
-# Feature Importances
-vals = gbt_pipelineModel.stages[-1].featureImportances.indices
-arr  = gbt_pipelineModel.stages[-1].featureImportances.toArray()
-
-pd.DataFrame([(colList[f],arr[f]) for f in vals], index=[colList[f] for f in vals])[[1]] \
-         .sort_values(by=1, ascending=True) \
-         .plot(kind='barh', title='Gradient Boosted Trees\nFeature Importances', legend=False)
-plt.show()
-```
-
-<img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
+Discovering the most influential features in a data set, and exploring the topics in unstructured data contribute to presenting the initial understanding of an unknown data set.
 
 #### Latent Dirichlet Allocation (LDA) for Topic Modeling
-This example uses LDA for topic modeling, based on twitter data archives from the 2016 presidential election cycle.  The larger study compares real news to fake news as determined by the fact-checking website, Politifact.  This code snippet represents a dimensionality reduction effort for exploring topics.
+This example uses LDA for topic modeling, based on articles collected from the 2016 presidential election cycle.  The larger study compares real news to fake news as determined by the fact-checking website, Politifact.  This code snippet represents a dimensionality reduction effort for exploring topics.
 
-Because the dimensionality of the topic variable is assumed known and fixed in LDA (i.e. it will not tell us the best number of topics), I created a repeatable process for LDA topic modeling which allows rapid investigation of topics given any combination of:
+Because the dimensionality of the topic variable is assumed known and fixed in LDA (i.e. it will not tell us the ideal number of topics), I created a repeatable process for LDA topic modeling which allows rapid investigation of topics given any combination of:
 
-* various numbers of topics
-* size of vocabulary
-* hello
+* Vocabulary size (Number of features)
+* Number of topics to plot
+* Number of words per topic
 
-I centralized the variables so that the process is to change the values in one place and run the same code cell to see the result.
+I centralized the variables so that the process is to change the values in one place, then run the same code cell to see the result.
 
 ```python
 def dynamic_grid(n_topics):
@@ -473,7 +422,106 @@ mylda_r, myvect_r, topics_r = get_lda_word_model(corpusr, min_df, max_df, n_voca
 
 <img width="998" alt="Screenshot 2024-09-04 at 12 07 13 PM" src="https://github.com/user-attachments/assets/56586463-47b5-4a00-b609-3c665be28f78">
 
+#### Chi-Squared feature selection in pyspark
+For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
 
+```python
+from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
+from pyspark.ml import Pipeline
+
+## Set the number of selected features, this will be used throught the entire investigation
+numFeatures = 10
+
+# Set StringOrderType because the default of frequencyDesc labels VACC backwards 
+labelIndexer = StringIndexer(inputCol="VACC", outputCol="indexedLabel", stringOrderType='frequencyAsc')
+
+assembler = VectorAssembler(
+                inputCols = allCols, 
+                outputCol="features",
+                handleInvalid='skip')
+
+featureIndexer = VectorIndexer(inputCol="features", outputCol="indexedFeatures", handleInvalid='skip')
+selector    = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
+pipeline    = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
+chisq_model = pipeline.fit(selector_df)
+
+# use the selected predictors throughout the investigation
+colList = [allCols[x] for x in chisq_model.stages[-1].selectedFeatures]
+
+# Format the selected features so that they are neatly presented
+pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_caption('Chi-Squared feature selection')
+```
+<img width="160" alt="Screenshot 2024-09-03 at 4 50 47 PM" src="https://github.com/user-attachments/assets/f5498edf-b685-495a-9847-82c376c79344">
+
+<dl>
+<dt>Feature Importance</dt> 
+<dd>Feature Importance is plotted using the Gradient Boosted Trees Classifier.</dd>
+</dl>
+
+Here we see the best predictor for getting a covid vaccination in 2021 (when the vaccine was initially released) is simply the week of the year.  During that year, the more widely available the vaccine became, the more people were getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
+
+```python
+# Feature Importances
+vals = gbt_pipelineModel.stages[-1].featureImportances.indices
+arr  = gbt_pipelineModel.stages[-1].featureImportances.toArray()
+
+pd.DataFrame([(colList[f],arr[f]) for f in vals], index=[colList[f] for f in vals])[[1]] \
+         .sort_values(by=1, ascending=True) \
+         .plot(kind='barh', title='Gradient Boosted Trees\nFeature Importances', legend=False)
+plt.show()
+```
+
+<img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
+
+#### Word Clouds
+While not truly a dimensionality reduction technique, word clouds are a visually appealing way of setting expectations on the emphasis of possible topics are hidden in a corpus.
+
+```python
+## Set up the dataframe so that day is the index
+dfwf.set_index(keys=dfwf.day, drop=True, inplace=True)
+dfwf.drop(columns=['day'],inplace=True)
+
+## Keep rows only when freq < 200000 (i.e. get rid of outliers on 7-10 and 7-11)
+dfwf = dfwf.loc[dfwf.freq < 200000]
+
+## Get the top N words from each day
+topNwords = [dfwf.groupby(dfwf.index).get_group(x).nlargest(50, 'freq').word.values for x in dfwf.index.unique()] 
+
+## The Word Cloud library requires a single string with all words space separated
+text = ""
+for w in topNwords:
+    text += " ".join(map(str,w))
+    text += " "
+# Build the word cloud using matplot lib
+
+def buildwc(maskfile=''):
+    
+    global tdata_path
+
+    if len(maskfile) > 0:
+        mask = np.array(Image.open(tdata_path+maskfile))
+        word_cloud = WordCloud(collocations = False, mask=mask, max_font_size = 1000, background_color = 'white', contour_width=2, contour_color='black' ).generate(text)
+        figname='covidwordcloud_'+maskfile[0:maskfile.find('.')]+'.png'
+    else:
+        word_cloud = WordCloud(collocations = False, background_color = 'white', width=700, height=350).generate(text)
+        figname = 'covidwordcloud.png'
+
+    
+    plt.imshow(word_cloud, interpolation='none') # could also be bilinear
+    plt.axis("off")
+    plt.savefig(figname)
+    plt.show()
+
+buildwc()
+```
+<img width="515" alt="Screenshot 2024-09-04 at 2 08 15 PM" src="https://github.com/user-attachments/assets/d2b5f0a6-b088-49ac-b885-61858cb875af">
+
+I arranged the wordcloud code into a function to make it possible to test multiple mask files easily, to see which cloud made the best impression for a presentation.  Here is a second example using a different mask.
+
+```python
+buildwc(maskfile = 'virusshape.jpg')
+```
+<img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
 
 ### Summary Statistics
