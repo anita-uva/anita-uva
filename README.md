@@ -474,7 +474,12 @@ plt.show()
 <img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
 
 #### Word Clouds
-While not truly a dimensionality reduction technique, word clouds are a visually appealing way of setting expectations on the emphasis of possible topics are hidden in a corpus.
+While not truly a dimensionality reduction technique, word clouds are a visually appealing way of setting expectations around possible topics that might be hidden in a corpus.
+
+<dl>
+<dt>Word Cloud</dt> 
+<dd>A simple but impactful word cloud created from twitter data using the WordCloud library for Python.</dd>
+</dl>
 
 ```python
 ## Set up the dataframe so that day is the index
@@ -523,12 +528,40 @@ buildwc(maskfile = 'virusshape.jpg')
 ```
 <img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
-
 ### Summary Statistics
-### Correlation
+The best way to describe the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, and more.
 
+#### Bar Chart showing Data Imbalance
+This bar chart shows how the selected outcome variable distribution changes over scope of time, by week.
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Use seaborn and pandas for a quick plot
+sns.set_theme(style="ticks", color_codes=True)
+
+df_weekvac = df.select('VACC','WEEK').toPandas()
+
+sns.catplot(y="WEEK", hue="VACC", kind="count", legend=False,
+            palette="pastel", edgecolor=".6", data=df_weekvac)
+
+plt.title("Response Variable by Week")
+plt.legend(title='Vaccinated', labels=['No', 'Yes'], loc=2, bbox_to_anchor = (1,1))
+plt.show()
+```
+
+<dl>
+<dt>Data Distribution Bar Chart</dt> 
+<dd>Notice how the distribution of this outcome variable changes as the week changes.  This indicates a time series data set, which will mean time series testing and models will need to be be considered.</dd>
+</dl>
+
+<img width="628" alt="Screenshot 2024-09-04 at 2 38 20 PM" src="https://github.com/user-attachments/assets/cc76934b-31b2-4eb5-9fa3-b7e786617668">
+
+#### Correlation
 
 ## TODO: Machine Learning
+## TODO: Bayesian
 
 <!--
 src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.github.io/blob/7383f755fb25c0e1cacd64ce24120cf5618cde84/Freight_Marketplace.html
