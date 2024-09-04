@@ -620,13 +620,19 @@ adplot = adplot.groupby('Bias').agg('mean')
 _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywood', 'darkorange', 'bisque']).set_xticklabels(labels=myplot.index.unique(), rotation = 0)
 ```
 <dl>
-<dt>Sentiment Analysis with Bias</dt> 
-<dd>We see positivity is consistently the lowest sentiment, regardless of bias. And while it ranks much higher than positivity, negativity is always the second highest sentiment. Surprisingly, neutral is always the highest ranking sentiment for every bias.</dd>
-<dd>When comparing headlines and articles, we see that positive sentiment for headlines is always ranked below 10%, whereas articles exhibit more positivity (over 10% in every case) within the article text. It seems that headlines may be less positive than the article content.</dd>
-<dd>Articles classified as "Center" bias show less negativity in their headines and their article content. Maybe not surprisingly, the Left and Right extremes are more likely to exhibit negatvity in their headlines and articles than the more central classifications.</dd>
-<dd>The "Left" bias edges the "Right" bias with the most negatvity of any classification, in both headlines and article text.</dd>
-<dd>Center bias is narrowly the most likely to show positivity when comapred to all other biases.</dd>
+<dt>Sentiment Analysis with Media Bias</dt> 
+<dd>Consider the following points with the RoBERTa Sentiment Analysis results.</dd>
 </dl>
+
+* We see positivity is consistently the lowest sentiment, regardless of bias. And while it ranks much higher than positivity, negativity is always the second highest sentiment. Surprisingly, neutral is always the highest ranking sentiment for every bias.
+  
+* When comparing headlines and articles, we see that positive sentiment for headlines is always ranked below 10%, whereas articles exhibit more positivity (over 10% in every case) within the article text. It seems that headlines may be less positive than the article content.
+  
+* Articles classified as "Center" bias show less negativity in their headines and their article content. Maybe not surprisingly, the Left and Right extremes are more likely to exhibit negatvity in their headlines and articles than the more central classifications.
+  
+* The "Left" bias edges the "Right" bias with the most negatvity of any classification, in both headlines and article text.
+  
+* Center bias is narrowly the most likely to show positivity when comapred to all other biases.
 
 <img width="990" alt="Screenshot 2024-09-04 at 5 01 30 PM" src="https://github.com/user-attachments/assets/e315c498-ef8b-4e82-a476-792afc084051">
 
