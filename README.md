@@ -300,12 +300,11 @@ workingdf.sample(15).T
 <img width="742" alt="Screenshot 2024-09-03 at 11 50 28 AM" src="https://github.com/user-attachments/assets/13dc1755-5bef-4646-8abf-d8a4efba5422">
 
 ## Exploratory Data Analysis
-Some of my favorite work is EDA.  I love to discover what the data has to say!
+Some of my favorite work is improving the scalability and processes for EDA.  And I love to discover what the data has to say!
 
 
+### Dimensionality Reduction & Feature Importance
 
-### Feature Reduction
-#### LDA
 #### Chi-Squared feature selection in pyspark
 For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
 
@@ -325,11 +324,8 @@ assembler = VectorAssembler(
                 handleInvalid='skip')
 
 featureIndexer = VectorIndexer(inputCol="features", outputCol="indexedFeatures", handleInvalid='skip')
-
-selector  = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
-
-pipeline = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
-
+selector    = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
+pipeline    = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
 chisq_model = pipeline.fit(selector_df)
 
 # use the selected predictors throughout the investigation
@@ -340,18 +336,17 @@ pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_ca
 ```
 <img width="160" alt="Screenshot 2024-09-03 at 4 50 47 PM" src="https://github.com/user-attachments/assets/f5498edf-b685-495a-9847-82c376c79344">
 
-
 <dl>
 <dt>Feature Importance</dt> 
 <dd>Feature Importance is plotted from the Gradient Boosted Trees Classifier.</dd>
 </dl>
 
-Here I show the best predictor for getting a covid vaccine in 2021 (when the vaccine was initially released) is simply the week of the year.  Because in that year, the more widely available the vaccine became, the more people were actually getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
+Here we see the best predictor for getting a covid vaccination in 2021 (when the vaccine was initially released) is simply the week of the year.  During that year, the more widely available the vaccine became, the more people were getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
 
 ```python
 # Feature Importances
 vals = gbt_pipelineModel.stages[-1].featureImportances.indices
-arr = gbt_pipelineModel.stages[-1].featureImportances.toArray()
+arr  = gbt_pipelineModel.stages[-1].featureImportances.toArray()
 
 pd.DataFrame([(colList[f],arr[f]) for f in vals], index=[colList[f] for f in vals])[[1]] \
          .sort_values(by=1, ascending=True) \
@@ -360,6 +355,117 @@ plt.show()
 ```
 
 <img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
+
+#### Latent Dirichlet Allocation (LDA) for Topic Modeling
+This example uses LDA for topic modeling, based on twitter data archives from the 2016 presidential election cycle.  The larger study compares real news to fake news as determined by the fact-checking website, Politifact.  This code snippet represents a dimensionality reduction effort for exploring topics.
+
+Because the dimensionality of the topic variable is assumed known and fixed in LDA, I created a repeatable process for LDA topic modeling which allowed rapid investigation of topics given various numbers of topics.
+
+```python
+def dynamic_grid(n_topics):
+    
+    ## Dynamic plot grid for topic models
+    
+    ## First Arrange the plot rows and columns to fit
+    num_topics = n_topics
+    
+    multiples = [x for x in range(1, num_topics+1) if num_topics%x == 0]
+
+    if multiples[-2] == 1:
+        ax_rows=1
+        ax_cols=num_topics
+    else:
+        ax_rows = int(num_topics/multiples[-2])
+        ax_cols = multiples[-2]
+   
+    # We never want more than 5 cols wide
+    while ax_cols > 5:
+        ax_cols = ceil(ax_cols/2)
+        ax_rows = ax_rows *2
+        
+        # eliminate empty graph rows
+        overflow = (ax_cols*ax_rows)-num_topics
+        if overflow >= ax_cols:
+            ax_rows = ax_rows-floor(overflow/ax_cols)
+
+    return(ax_rows, ax_cols)
+    
+def plot_word_topics(model, feature_names, n_top_words, title):
+    
+    num_topics = model.components_.shape[0]
+    ax_rows, ax_cols = dynamic_grid(num_topics)
+            
+    fig, axes = plt.subplots(ax_rows, ax_cols, figsize=(30, num_topics+10), sharex=True)
+    
+    ## This line to plt.show is almost verbatim copied from scikit-learn documentation
+    ## https://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html
+    
+    axes = axes.flatten()
+    dfs=[]
+    
+    for topic_idx, topic in enumerate(model.components_):
+        top_features_ind = topic.argsort()[: -n_top_words - 1 : -1]
+        top_features = [feature_names[i] for i in top_features_ind]
+        weights = topic[top_features_ind]
+        dfs.append(pd.DataFrame( { 'topic': topic_idx+1, 'features': ' '.join(top_features) }, index=[topic_idx+1] ))
+
+        ax = axes[topic_idx]
+        ax.barh(top_features, weights, height=0.7)
+        ax.set_title(f"Topic {topic_idx +1}", fontdict={"fontsize": 30})
+        ax.invert_yaxis()
+        ax.tick_params(axis="both", which="major", labelsize=20)
+        for i in "top right left".split():
+            ax.spines[i].set_visible(False)
+        fig.suptitle(title, fontsize=40)
+
+    plt.subplots_adjust(top=0.90, bottom=0.05, wspace=0.90, hspace=0.3)
+    plt.show()
+    
+    return(pd.concat(dfs))
+
+# This includes defaults, but they are not specifically meaningful
+def get_lda_word_model(corpus, 
+                       min_df = 0.20, 
+                       max_df = 0.80, 
+                       lda_features  = 1000, 
+                       lda_components= 20, 
+                       topic_word_len= 10):
+    
+    '''Takes values for sklearn's CountVectorizer and LatentDirichletAllocation;
+    Displays a grid of topics plotted with their words and returns the LDA Model and Vectorizer Model'''
+    
+    tf_vectorizer = CountVectorizer(max_df=max_df, min_df=min_df, max_features=lda_features, stop_words="english")
+    tf = tf_vectorizer.fit_transform(corpus)
+
+    tf_feature_names = tf_vectorizer.get_feature_names()
+
+    lda = LatentDirichletAllocation(n_components=lda_components,max_iter=10,random_state=42)
+    lda.fit(tf)
+
+    topic_df = plot_word_topics(lda, tf_feature_names, n_topic_size, "Latent Dirichlet Allocation (LDA)")
+    
+    return(lda, tf_vectorizer, topic_df)
+
+## Set values for Count Vectorizer and LDA
+n_vocab_size = 1000 # Feature size for LDA to target
+n_topics     = 20   # How many topics to plot
+n_topic_size = 10   # Number of words per topic
+
+## Use floats here, not integers
+max_df = 0.80 ## words repeated in 80%  of documents are too common, so eliminate
+min_df = 0.10 ## words used in only 10% of documents are too special, eliminate
+
+## Get the LDA Model, a list of feature names, and a dataframe of topics
+## from get_lda_word_model
+mylda_r, myvect_r, topics_r = get_lda_word_model(corpusr, min_df, max_df, n_vocab_size, n_topics, n_topic_size)
+```
+<dl>
+<dt>Topic Grid</dt> 
+<dd>The result is a simplified process for reviewing and retrying any variation of vocabulary size, topics, and number of words per topic.</dd>
+  <dd>This shows topics 11-20 (reduced from 1-20 to save space) of a 20 topic investigation with 10 words per topic.</dd>
+</dl>
+
+<img width="998" alt="Screenshot 2024-09-04 at 12 07 13 PM" src="https://github.com/user-attachments/assets/56586463-47b5-4a00-b609-3c665be28f78">
 
 
 ### Summary Statistics
