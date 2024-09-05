@@ -728,6 +728,12 @@ Regression demands addressing a unique set of concerns, such as correlation betw
 
 #### Correlation
 
+```R
+## Use Pearsons
+pears_corr <- round(cor(redwine), digits = 2)
+kable(pears_corr)
+```
+
 ## TODO: Machine Learning
 ## TODO: Bayesian
 
