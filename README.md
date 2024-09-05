@@ -744,6 +744,8 @@ plot(fixed.acidity, density, main="Fixed Acidity and Density")
 plot(free.sulfur.dioxide, total.sulfur.dioxide, main="Free and Total Sulfur Dioxide")
 plot(pH, fixed.acidity, main="pH and Fixed Acidity")
 ```
+Scatter plots for each of the four statistically significant correlations.
+
 <img width="695" alt="Screenshot 2024-09-05 at 4 51 41 PM" src="https://github.com/user-attachments/assets/f49e8614-a153-4986-93c1-3265ed9c4607">
 
 
