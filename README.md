@@ -721,15 +721,42 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 [Full Sentiment Analysis Code](./RoBERTa_Sentiment_Analysis.html)
 
 #### Regression EDA
-Regression demands addressing a unique set of concerns, such as correlation between predictors, influential outliers, etc. 
+Regression demands addressing a unique set of concerns, such as confirmation of linearity in the data, correlation between predictors, and influential outliers, among others.
 
+### Outliers
+Data points that are beyond the majority of the samples may be cause for concern in Regression scenarios.  The first step is to identify features who posess such outliers.
+
+```R
+par(mfrow=c(1,6), oma = c(1,1,0,0) + 0.1,  mar = c(3,3,1,1) + 0.1)
+
+boxplot(residual.sugar, col="peachpuff2", pch=19)
+mtext("Residual Sugar", cex=0.8, side=1, line=2)
+
+boxplot(chlorides, col="peachpuff2", pch=19)
+mtext("Chlorides", cex=0.8, side=1, line=2)
+
+boxplot(sulphates, col="peachpuff2", pch=19)
+mtext("Sulphates", cex=0.8, side=1, line=2)
+
+boxplot(density, col="peachpuff2", pch=19)
+mtext("Density", cex=0.8, side=1, line=2)
+
+boxplot(fixed.acidity, col="peachpuff2", pch=19)
+mtext("Fixed Acidity", cex=0.8, side=1, line=2)
+
+boxplot(total.sulfur.dioxide, col="peachpuff2", pch=19)
+mtext("Total SO2", cex=0.8, side=1, line=2)
+```
+The boxplots reveal outliers, as well as the scale of the data.  An interesting point here is additionally how little variance the Density feature is providing.
+
+<img width="734" alt="Screenshot 2024-09-05 at 5 38 01 PM" src="https://github.com/user-attachments/assets/d9ddf701-165d-4420-9353-ed64cc40c722">
 
 [Full Exploratory Analysis on Wine Data](./Exploratory_Wine_Dataset.html)
 
 ### Multicollinearity
 Regression is sensitive to the independent variables being correlated with each other. Here we see an indicator of multicolliniarity through a Person's test.  A follow on activity would be to review the Variance Inflation Factor (VIF) for each highly correlated pair.
 
-Each of these four correlations are statistically significant.  
+Review the Pearson's test for indications of highly correlated pairs.
 
 ```R
 ## Use Pearsons
@@ -738,7 +765,7 @@ kable(pears_corr)
 ```
 <img width="1147" alt="Screenshot 2024-09-05 at 4 51 03 PM" src="https://github.com/user-attachments/assets/581a0848-8b4b-4f86-85c0-4327d3752eff">
 
-The following predictors are highly correlated with each other; they have a correlation coefficient over .60.
+Each of the following pairs exhibit a correlation coefficient over .60, which begs more investigation.
 
 ```R
 par(mfrow=c(2,2), oma = c(1,1,0,0) + 0.1, mar = c(3,3,1,1) + 0.1)
