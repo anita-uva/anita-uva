@@ -7,6 +7,8 @@
 ## Data Visualization
 Telling the data's story is best accomplished with powerful graphics.  Here are a couple of examples of useful graphics.
 
+### Data Movement over Time
+
 <dl>
 <dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
 <dd>Attitudes toward the Covid Vaccination</dd>
@@ -29,6 +31,61 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 <img width="788" alt="MentalHealth-NewsLinePlot" src="https://github.com/user-attachments/assets/7d73685f-036e-48a8-b8bc-1c6d706be3c9">
 
 Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  But we also see people on edge, with notable reactions to potentially destabilizing news.
+
+### Word Clouds
+While not truly a dimensionality reduction technique, word clouds are a visually appealing way of setting expectations around possible topics that might be hidden in a corpus.
+
+<dl>
+<dt>Word Cloud</dt> 
+<dd>A simple but impactful word cloud created from twitter data using the WordCloud library for Python.</dd>
+</dl>
+
+```python
+## Set up the dataframe so that day is the index
+dfwf.set_index(keys=dfwf.day, drop=True, inplace=True)
+dfwf.drop(columns=['day'],inplace=True)
+
+## Keep rows only when freq < 200000 (i.e. get rid of outliers on 7-10 and 7-11)
+dfwf = dfwf.loc[dfwf.freq < 200000]
+
+## Get the top N words from each day
+topNwords = [dfwf.groupby(dfwf.index).get_group(x).nlargest(50, 'freq').word.values for x in dfwf.index.unique()] 
+
+## The Word Cloud library requires a single string with all words space separated
+text = ""
+for w in topNwords:
+    text += " ".join(map(str,w))
+    text += " "
+# Build the word cloud using matplot lib
+
+def buildwc(maskfile=''):
+    
+    global tdata_path
+
+    if len(maskfile) > 0:
+        mask = np.array(Image.open(tdata_path+maskfile))
+        word_cloud = WordCloud(collocations = False, mask=mask, max_font_size = 1000, background_color = 'white', contour_width=2, contour_color='black' ).generate(text)
+        figname='covidwordcloud_'+maskfile[0:maskfile.find('.')]+'.png'
+    else:
+        word_cloud = WordCloud(collocations = False, background_color = 'white', width=700, height=350).generate(text)
+        figname = 'covidwordcloud.png'
+
+    
+    plt.imshow(word_cloud, interpolation='none') # could also be bilinear
+    plt.axis("off")
+    plt.savefig(figname)
+    plt.show()
+
+buildwc()
+```
+<img width="515" alt="Screenshot 2024-09-04 at 2 08 15 PM" src="https://github.com/user-attachments/assets/d2b5f0a6-b088-49ac-b885-61858cb875af">
+
+I arranged the wordcloud code into a function to make it possible to test multiple mask files easily, to see which cloud made the best impression for a presentation.  Here is a second example using a different mask.
+
+```python
+buildwc(maskfile = 'virusshape.jpg')
+```
+<img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
 
 ## Data Collection and Cleaning
@@ -553,63 +610,10 @@ plt.show()
 
 <img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
 
-#### Word Clouds
-While not truly a dimensionality reduction technique, word clouds are a visually appealing way of setting expectations around possible topics that might be hidden in a corpus.
 
-<dl>
-<dt>Word Cloud</dt> 
-<dd>A simple but impactful word cloud created from twitter data using the WordCloud library for Python.</dd>
-</dl>
 
-```python
-## Set up the dataframe so that day is the index
-dfwf.set_index(keys=dfwf.day, drop=True, inplace=True)
-dfwf.drop(columns=['day'],inplace=True)
-
-## Keep rows only when freq < 200000 (i.e. get rid of outliers on 7-10 and 7-11)
-dfwf = dfwf.loc[dfwf.freq < 200000]
-
-## Get the top N words from each day
-topNwords = [dfwf.groupby(dfwf.index).get_group(x).nlargest(50, 'freq').word.values for x in dfwf.index.unique()] 
-
-## The Word Cloud library requires a single string with all words space separated
-text = ""
-for w in topNwords:
-    text += " ".join(map(str,w))
-    text += " "
-# Build the word cloud using matplot lib
-
-def buildwc(maskfile=''):
-    
-    global tdata_path
-
-    if len(maskfile) > 0:
-        mask = np.array(Image.open(tdata_path+maskfile))
-        word_cloud = WordCloud(collocations = False, mask=mask, max_font_size = 1000, background_color = 'white', contour_width=2, contour_color='black' ).generate(text)
-        figname='covidwordcloud_'+maskfile[0:maskfile.find('.')]+'.png'
-    else:
-        word_cloud = WordCloud(collocations = False, background_color = 'white', width=700, height=350).generate(text)
-        figname = 'covidwordcloud.png'
-
-    
-    plt.imshow(word_cloud, interpolation='none') # could also be bilinear
-    plt.axis("off")
-    plt.savefig(figname)
-    plt.show()
-
-buildwc()
-```
-<img width="515" alt="Screenshot 2024-09-04 at 2 08 15 PM" src="https://github.com/user-attachments/assets/d2b5f0a6-b088-49ac-b885-61858cb875af">
-
-I arranged the wordcloud code into a function to make it possible to test multiple mask files easily, to see which cloud made the best impression for a presentation.  Here is a second example using a different mask.
-
-```python
-buildwc(maskfile = 'virusshape.jpg')
-```
-<img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
-
-### Statistical EDA
-The best way to describe the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, to the way nulls or otherwise missing values are recorded, and even more.
+### Discovery EDA
+The best way to discover the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, to the way nulls or otherwise missing values are recorded, and even more.
 
 #### Bar Chart showing Data Imbalance
 This bar chart shows how the selected outcome variable distribution changes over scope of time, by week.
