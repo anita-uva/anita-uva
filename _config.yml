@@ -5,7 +5,9 @@ plugins:
 
 title: Anita Taucher
 description: Data Scientist
-linkedin: agtaucher
+
+social_links:
+  linkedin: agtaucher
 
 show_downloads: false
 # google_analytics: [Your Google Analytics tracking ID]
