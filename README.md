@@ -5,6 +5,8 @@
 
 
 ## Data Visualization
+Telling the data's story is best accomplished with powerful graphics.  Here are a couple of examples of useful graphics.
+
 <dl>
 <dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
 <dd>Attitudes toward the Covid Vaccination</dd>
