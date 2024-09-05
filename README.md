@@ -228,8 +228,10 @@ print(tuib_lyrics)
 ```
 <img width="382" alt="Screenshot 2024-09-03 at 4 03 58 PM" src="https://github.com/user-attachments/assets/63db7d7d-2eac-4ea8-a430-f8cee7181e15">
 
+## Exploratory Data Analysis
+Some of my favorite work is improving the scalability and processes for EDA.  And I love to discover what the data has to say!
 
-### Data Transformation
+### Data Transformation to Useful Values
 Data transformation to useful, human readable information. 
 
 <dl>
@@ -299,8 +301,59 @@ workingdf.sample(15).T
 ```
 <img width="742" alt="Screenshot 2024-09-03 at 11 50 28 AM" src="https://github.com/user-attachments/assets/13dc1755-5bef-4646-8abf-d8a4efba5422">
 
-## Exploratory Data Analysis
-Some of my favorite work is improving the scalability and processes for EDA.  And I love to discover what the data has to say!
+### Data Normalization & Standardization
+In some instances, placing data will need to be placed on the same scale or normalized to an expected distribution.
+
+```python
+
+# Checking distributions and outliers
+_=sns.pairplot(income_compare, height=4)
+```
+<img width="594" alt="Screenshot 2024-09-05 at 1 17 04 PM" src="https://github.com/user-attachments/assets/02638cc5-f7b0-4458-8a09-50752912f645">
+
+* The histogram for occuplational_prestige data shows an approximately normal distribution but needs standardized to be centered on the mean.
+* The Income histogram shows a right skew and requires normalization.
+* The scatter plots indicate outliers around the value 80 for occupational prestige, and possibly above 120,000 in income.
+
+```python
+from scipy.stats import boxcox, zscore
+
+# Income is not normal, so normalize here
+inc_data, inc_lambda = boxcox(income_compare.income)
+
+# With Income and Prestige approximately Normal
+# Make a new dataframe
+normal = pd.DataFrame(zip(inc_data, income_compare.occupational_prestige, income_compare.gender))\
+            .rename(columns={0:'income', 1:'occupational_prestige', 2: 'gender'})
+
+# Use a zscore test to eliminate outliers; we're removing +-2.5 std deviations
+inc_drop_list = [i for i,x in enumerate(zscore(normal.income)) if x > 2.5 or x < -2.5]
+prs_drop_list = [i for i,x in enumerate(zscore(normal.occupational_prestige)) if x > 2.5 or x < -2.5]
+
+# drop rows from dataframe, based on previously zscore +-2.5 std deviations
+normal = normal.drop(index=inc_drop_list)
+normal = normal.drop(index=prs_drop_list)
+
+# Plot New Histograms to show normalized and standardized data
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+fig.suptitle('Approximately Normal Distribution for Income and Occupational Prestige')
+
+plt.rc('figure', figsize = (10,5))
+plt.rc('font', size=12)
+
+ax1.hist(normal.income, bins=14, color='lavender',  edgecolor='black')
+ax1.set_title('Income')
+ax1.set(xlabel='Annual Income', ylabel='Frequency')
+
+ax2.hist(normal.occupational_prestige, bins=10, color='lavender', edgecolor='black')
+_=ax2.set_title('Occupational Prestige')
+_=ax2.set(xlabel='Occupational Prestige Score')
+```
+
+<img width="413" alt="Screenshot 2024-09-05 at 1 24 17 PM" src="https://github.com/user-attachments/assets/4d9fe201-6bba-432b-b40b-07f8a27f9898">
+
+Note:  If this data will be used in models for prediction, I would scale these two items together. But for EDA, it is easier to understand and explain the variables visually when they are on their original scales.
 
 ### Dimensionality Reduction & Feature Importance
 Discovering the most influential features in a data set, and exploring the topics in unstructured data contribute to presenting the initial understanding of an unknown data set.
@@ -529,7 +582,7 @@ buildwc(maskfile = 'virusshape.jpg')
 <img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
 ### Statistical EDA
-The best way to describe the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, and more.
+The best way to describe the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, to the way nulls or otherwise missing values are recorded, and even more.
 
 #### Bar Chart showing Data Imbalance
 This bar chart shows how the selected outcome variable distribution changes over scope of time, by week.
@@ -558,7 +611,9 @@ plt.show()
 <img width="628" alt="Screenshot 2024-09-04 at 2 38 20 PM" src="https://github.com/user-attachments/assets/cc76934b-31b2-4eb5-9fa3-b7e786617668">
 
 #### RoBERTa Sentiment Analysis as EDA
-In this snippet, I use a pre-trained RoBERTa model to classify article headlines and article text, separately, as Negative, Neutral, or Positive.  The dataset being processed by RoBERTa is comprised of articles that have been labeled by a bias of Left, Center, or Right.  The goal of this EDA step is to gain an understanding of negativity and positivity by bias.
+In this snippet, I use a pre-trained RoBERTa model to classify article headlines and article text, separately, as Negative, Neutral, or Positive.  The dataset being processed by RoBERTa is comprised of articles that have been labeled with a bias of Left, Center, or Right.  
+
+The goal of this EDA step is to gain an understanding of negativity and positivity by media bias.
 
 ```python
 # load model and tokenizer
@@ -639,7 +694,8 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 [Full Sentiment Analysis Code](./RoBERTa_Sentiment_Analysis.html)
 
 #### Regression EDA
-Outliers? Multicollinearity
+Regression demands addressing a unique set of concerns, such as correlation between predictors, influential outliers, etc.  Here we see an indicator of multicolliniarity through a Person's test
+
 
 [Full Exploratory Analysis on Wine Data](./Exploratory_Wine_Dataset.html)
 
