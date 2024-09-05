@@ -721,12 +721,15 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 [Full Sentiment Analysis Code](./RoBERTa_Sentiment_Analysis.html)
 
 #### Regression EDA
-Regression demands addressing a unique set of concerns, such as correlation between predictors, influential outliers, etc.  Here we see an indicator of multicolliniarity through a Person's test
+Regression demands addressing a unique set of concerns, such as correlation between predictors, influential outliers, etc. 
 
 
 [Full Exploratory Analysis on Wine Data](./Exploratory_Wine_Dataset.html)
 
-#### Correlation
+### Multicollinearity
+Regression is sensitive to the independent variables being correlated with each other. Here we see an indicator of multicolliniarity through a Person's test.  A follow on activity would be to review the Variance Inflation Factor (VIF) for each highly correlated pair.
+
+Each of these four correlations are statistically significant.  
 
 ```R
 ## Use Pearsons
