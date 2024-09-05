@@ -733,6 +733,20 @@ Regression demands addressing a unique set of concerns, such as correlation betw
 pears_corr <- round(cor(redwine), digits = 2)
 kable(pears_corr)
 ```
+<img width="1147" alt="Screenshot 2024-09-05 at 4 51 03 PM" src="https://github.com/user-attachments/assets/581a0848-8b4b-4f86-85c0-4327d3752eff">
+
+The following predictors are highly correlated with each other; they have a correlation coefficient over .60.
+
+```R
+par(mfrow=c(2,2), oma = c(1,1,0,0) + 0.1, mar = c(3,3,1,1) + 0.1)
+plot(fixed.acidity, citric.acid, main="Fixed Acidity and Citric Acid")
+plot(fixed.acidity, density, main="Fixed Acidity and Density")
+plot(free.sulfur.dioxide, total.sulfur.dioxide, main="Free and Total Sulfur Dioxide")
+plot(pH, fixed.acidity, main="pH and Fixed Acidity")
+```
+<img width="695" alt="Screenshot 2024-09-05 at 4 51 41 PM" src="https://github.com/user-attachments/assets/f49e8614-a153-4986-93c1-3265ed9c4607">
+
+
 
 ## TODO: Machine Learning
 ## TODO: Bayesian
