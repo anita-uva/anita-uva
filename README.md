@@ -528,7 +528,7 @@ buildwc(maskfile = 'virusshape.jpg')
 ```
 <img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
-### Summary Statistics
+### Statistical EDA
 The best way to describe the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, and more.
 
 #### Bar Chart showing Data Imbalance
@@ -638,6 +638,10 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 
 [Full Sentiment Analysis Code](./RoBERTa_Sentiment_Analysis.html)
 
+#### Regression EDA
+Outliers? Multicollinearity
+
+[Full Exploratory Analysis on Wine Data](./Exploratory_Wine_Dataset.html)
 
 #### Correlation
 
