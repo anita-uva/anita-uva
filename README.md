@@ -228,11 +228,19 @@ print(tuib_lyrics)
 ```
 <img width="382" alt="Screenshot 2024-09-03 at 4 03 58 PM" src="https://github.com/user-attachments/assets/63db7d7d-2eac-4ea8-a430-f8cee7181e15">
 
+### TODO: Steaming Data with Kafka
+Need to create a better example than I have existing...
+
 ## Exploratory Data Analysis
 Some of my favorite work is improving the scalability and processes for EDA.  And I love to discover what the data has to say!
 
-### Data Transformation to Useful Values
-Data transformation to useful, human readable information. 
+### Data Transformation
+Data transformation takes on different meanings.  For example, Survey data might be better represented as a text-based, readable scale of values for better understanding, as opposed to a numeric 1-5 kind of scale.  But, we might also change the values of the data to exist within a known distribution, or to be changed to the same scale as other variables.
+
+Here are a couple of snippets showing data transformation.
+
+#### Reveal Meanings with Understandable Values
+Data transformation to useful, quickly digestable information.  This is especially useful for presenting data to a broad audience or to help explain the raw data.
 
 <dl>
 <dt>Transform columns from numeric codes</dt> 
@@ -301,8 +309,13 @@ workingdf.sample(15).T
 ```
 <img width="742" alt="Screenshot 2024-09-03 at 11 50 28 AM" src="https://github.com/user-attachments/assets/13dc1755-5bef-4646-8abf-d8a4efba5422">
 
-### Data Normalization & Standardization
+#### Data Normalization & Standardization
 In some instances, placing data will need to be placed on the same scale or normalized to an expected distribution.
+
+<dl>
+<dt>Transform data Values</dt> 
+<dd>Preparing for model consumption.</dd>
+</dl>
 
 ```python
 
@@ -353,7 +366,20 @@ _=ax2.set(xlabel='Occupational Prestige Score')
 
 <img width="413" alt="Screenshot 2024-09-05 at 1 24 17 PM" src="https://github.com/user-attachments/assets/4d9fe201-6bba-432b-b40b-07f8a27f9898">
 
-Note:  If this data will be used in models for prediction, I would scale these two items together. But for EDA, it is easier to understand and explain the variables visually when they are on their original scales.
+If this data will be used in models for prediction, I would scale these two items together. But for EDA, it is easier to understand and explain the variables visually when they are on their original scales.
+
+```python
+plt.figure(figsize=(7,7))
+sns.kdeplot(normal.income, shade=True, label='Income')
+sns.kdeplot(normal.occupational_prestige, shade=True, label='Prestige')
+plt.ylabel('Frequency')
+plt.xlabel('Scale')
+plt.title('Distribution of Income and Prestige')
+plt.legend()
+```
+
+<img width="496" alt="Screenshot 2024-09-05 at 1 53 36 PM" src="https://github.com/user-attachments/assets/ba342011-6516-4bf9-93c2-49908c19972d">
+
 
 ### Dimensionality Reduction & Feature Importance
 Discovering the most influential features in a data set, and exploring the topics in unstructured data contribute to presenting the initial understanding of an unknown data set.
