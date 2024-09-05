@@ -720,7 +720,7 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 
 [Full Sentiment Analysis Code](./RoBERTa_Sentiment_Analysis.html)
 
-#### Regression EDA
+## Regression EDA
 Regression demands addressing a unique set of concerns, such as confirmation of linearity in the data, correlation between predictors, and influential outliers, among others.
 
 ### Outliers
