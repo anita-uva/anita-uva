@@ -738,8 +738,3 @@ src=https://html-preview.github.io/?url=https://github.com/anita-uva/anita-uva.g
 **anita-uva/anita-uva** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 -->
 
-<style>
-  .footer {
-    display: none;
-  }
-</style>
