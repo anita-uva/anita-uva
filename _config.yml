@@ -4,7 +4,7 @@ plugins:
 - jekyll-remote-theme
 
 title: Anita Taucher
-description: .Data Scientist. Especially Strong in Python and SQL
+description: _Data Scientist_ Especially Strong in Python and SQL
 
 show_downloads: false
 # google_analytics: [Your Google Analytics tracking ID]
