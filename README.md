@@ -33,7 +33,7 @@ The survey asked respondents to rate their feelings of Anxiety on a scale from 1
 Notice, as the vaccination is distributed, people begin to feel less anxious, overall.  But we also see people on edge, with notable reactions to potentially destabilizing news.
 
 ### Word Clouds
-While not truly a dimensionality reduction technique, word clouds are a visually appealing way of setting expectations around possible topics that might be hidden in a corpus.
+Word clouds are a visually appealing way of setting expectations around vocabulary that might be hidden in a corpus.
 
 <dl>
 <dt>Word Cloud</dt> 
