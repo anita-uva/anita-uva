@@ -559,6 +559,8 @@ mylda_r, myvect_r, topics_r = get_lda_word_model(corpusr, min_df, max_df, n_voca
 
 <img width="998" alt="Screenshot 2024-09-04 at 12 07 13 PM" src="https://github.com/user-attachments/assets/56586463-47b5-4a00-b609-3c665be28f78">
 
+[Full Latent Dirichlet Allocation Code](./Latent_Dirichlet_LDA.html)
+
 #### Chi-Squared feature selection in pyspark
 For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
 
