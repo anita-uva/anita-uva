@@ -1,4 +1,10 @@
 # Data Science and Analytics
+Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's degree in Data Science from The University of Virginia. After taking a necessary two-year break to focus on personal recovery following the unexpected passing of my husband, I am eager to apply my expertise to new and meaningful projects, particularly in research.
+
+With a solid foundation in Python, SQL, and an enthusiasm for machine learning,  my portfolio showcases a broad selection of work, highlighting my ability to deliver data-driven insights and innovative solutions.
+
+Thank you for visiting my portfolio. I look forward to connecting and exploring how my skills and experiences can contribute to impactful data science initiatives.
+
 
 * TOC
 {:toc}
