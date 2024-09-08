@@ -1,7 +1,7 @@
 # Data Science and Analytics
 Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's degree in Data Science from The University of Virginia. After taking a necessary two-year break to focus on personal recovery following the unexpected passing of my husband, I am eager to apply my expertise to new and meaningful projects, particularly in research.
 
-With a solid foundation in Python, SQL, and an enthusiasm for machine learning,  my portfolio showcases a broad selection of work, highlighting my ability to deliver data-driven insights and innovative solutions.
+With a solid foundation in Python, SQL, and ETL, as well as enthusiasm for machine learning,  my portfolio showcases a broad selection of work, highlighting my ability to deliver data-driven insights and innovative solutions.
 
 Thank you for visiting my portfolio. I look forward to connecting and exploring how my skills and experiences can contribute to impactful data science initiatives.
 
@@ -821,7 +821,7 @@ The boxplots reveal outliers, as well as the scale of the data.  An interesting 
 [Full Exploratory Analysis on Wine Data](./Exploratory_Wine_Dataset.html)
 
 ### Multicollinearity
-Regression is sensitive to the independent variables being correlated with each other. Here we see an indicator of multicolliniarity through a Person's test.  A follow on activity would be to review the Variance Inflation Factor (VIF) for each highly correlated pair.
+Regression is sensitive to the independent variables being correlated with each other. Here we see an indicator of multicolliniarity through a Person's test.  A follow on activity would be to review the Variance Inflation Factor (VIF) for each highly correlated pair or to run a Principal Components Analysis to create an uncorrelated set of features from the original.
 
 Review the Pearson's test for indications of highly correlated pairs.
 
