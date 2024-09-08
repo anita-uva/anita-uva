@@ -448,6 +448,112 @@ plt.legend()
 ### Dimensionality Reduction & Feature Importance
 Discovering the most influential features in a data set, and exploring the topics in unstructured data contribute to presenting the initial understanding of an unknown data set.
 
+#### Chi-Squared feature selection in pyspark
+For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
+
+```python
+from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
+from pyspark.ml import Pipeline
+
+## Set the number of selected features, this will be used throught the entire investigation
+numFeatures = 10
+
+# Set StringOrderType because the default of frequencyDesc labels VACC backwards 
+labelIndexer = StringIndexer(inputCol="VACC", outputCol="indexedLabel", stringOrderType='frequencyAsc')
+
+assembler = VectorAssembler(
+                inputCols = allCols, 
+                outputCol="features",
+                handleInvalid='skip')
+
+featureIndexer = VectorIndexer(inputCol="features", outputCol="indexedFeatures", handleInvalid='skip')
+selector    = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
+pipeline    = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
+chisq_model = pipeline.fit(selector_df)
+
+# use the selected predictors throughout the investigation
+colList = [allCols[x] for x in chisq_model.stages[-1].selectedFeatures]
+
+# Format the selected features so that they are neatly presented
+pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_caption('Chi-Squared feature selection')
+```
+<img width="160" alt="Screenshot 2024-09-03 at 4 50 47 PM" src="https://github.com/user-attachments/assets/f5498edf-b685-495a-9847-82c376c79344">
+
+<dl>
+<dt>Feature Importance</dt> 
+<dd>Feature Importance is plotted using the Gradient Boosted Trees Classifier.</dd>
+</dl>
+
+Here we see the best predictor for getting a covid vaccination in 2021 (when the vaccine was initially released) is simply the week of the year.  During that year, the more widely available the vaccine became, the more people were getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
+
+```python
+# Feature Importances
+vals = gbt_pipelineModel.stages[-1].featureImportances.indices
+arr  = gbt_pipelineModel.stages[-1].featureImportances.toArray()
+
+pd.DataFrame([(colList[f],arr[f]) for f in vals], index=[colList[f] for f in vals])[[1]] \
+         .sort_values(by=1, ascending=True) \
+         .plot(kind='barh', title='Gradient Boosted Trees\nFeature Importances', legend=False)
+plt.show()
+```
+
+<img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
+
+#### Principal Components Analysis (PCA)
+Reducing Dimensionality with PCA comes with the added benefit of uncorrelating highly correlated features.  Always the tradeoff with PCA is the relative difficulty in explaining that the data has changed to summary linear combinations of the original, while the variablility remains.
+
+This snippet of a Principal Components analysis is evaluating the predictive ability of survey data for the target feature "income", which is on a categorical scale of "High Medium or Low".
+
+```python
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+## This code was slightly modified from its original state.  
+## The original code can be found here:
+## https://www.reneshbedre.com/blog/principal-component-analysis.html
+
+# Prepare continuous variables from gss_clean
+pca_df = gss_clean.dropna()[['education', 'age', 'job_prestige', 'socioeconomic_index', 'sex', 'income']]\
+                  .rename(columns={'sex' : 'gender'})
+pca_df = pca_df.replace({'male' : 0, 'female' : 1})
+
+# Define the predictors
+X_raw = pca_df.iloc[:,0:5]
+
+# Prepare and define income as the target
+income_scale = pd.cut(pca_df['income'], 3)\
+                 .astype('category')\
+                 .cat.rename_categories(['Low', 'Moderate', 'High'])
+
+pca_df['income_scale'] = income_scale
+target = pca_df['income_scale'].to_numpy()
+
+# Standardize X features
+X = StandardScaler().fit_transform(X_raw)
+
+# Fit the model
+pca_out = PCA().fit(X)
+
+# component loadings
+loadings = pca_out.components_
+
+# Observations and Principal Components
+pcs = pd.DataFrame(loadings).set_index(X_raw.columns.values)\
+        .rename(columns={0:'pc1', 1:'pc2', 2:'pc3', 3:'pc4', 4:'pc5'})
+pcs
+```
+<img width="535" alt="Screenshot 2024-09-08 at 3 06 36 PM" src="https://github.com/user-attachments/assets/73d62469-3310-48d6-8671-9a048e015d6b">
+
+```python
+# Most important principal component
+_=pcs['pc1'].sort_values(ascending=False).plot(kind='barh')
+```
+<img width="707" alt="Screenshot 2024-09-08 at 3 07 19 PM" src="https://github.com/user-attachments/assets/df8e9723-6be4-481e-a10b-da290b461693">
+
+* The first principal compoent ranks socioeconomic_index as having the most variance (aka predictive ability) for predicting income in the presence of the other predictors. Culturally, we know this might be expected, as social economics is highly dependent on income, when not considering existing wealth.
+
+* Education is ranked next most important in this PC, which can also make sense in broad cultural terms, although not in all specific cases. But it is not hard to imagine that socioeconomic status with education could be a potent combination for predicting income.
+
 #### Latent Dirichlet Allocation (LDA) for Topic Modeling
 This example uses LDA for topic modeling, based on articles collected from the 2016 presidential election cycle.  The larger study compares real news to fake news as determined by the fact-checking website, Politifact.  This code snippet represents a dimensionality reduction effort for exploring topics.
 
@@ -566,57 +672,6 @@ mylda_r, myvect_r, topics_r = get_lda_word_model(corpusr, min_df, max_df, n_voca
 <img width="998" alt="Screenshot 2024-09-04 at 12 07 13 PM" src="https://github.com/user-attachments/assets/56586463-47b5-4a00-b609-3c665be28f78">
 
 [Full Latent Dirichlet Allocation Code](./Latent_Dirichlet_LDA.html)
-
-#### Chi-Squared feature selection in pyspark
-For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
-
-```python
-from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
-from pyspark.ml import Pipeline
-
-## Set the number of selected features, this will be used throught the entire investigation
-numFeatures = 10
-
-# Set StringOrderType because the default of frequencyDesc labels VACC backwards 
-labelIndexer = StringIndexer(inputCol="VACC", outputCol="indexedLabel", stringOrderType='frequencyAsc')
-
-assembler = VectorAssembler(
-                inputCols = allCols, 
-                outputCol="features",
-                handleInvalid='skip')
-
-featureIndexer = VectorIndexer(inputCol="features", outputCol="indexedFeatures", handleInvalid='skip')
-selector    = ChiSqSelector(numTopFeatures=numFeatures, featuresCol='indexedFeatures', outputCol="selectedFeatures",labelCol='indexedLabel')
-pipeline    = Pipeline(stages=[labelIndexer,assembler,featureIndexer,selector])
-chisq_model = pipeline.fit(selector_df)
-
-# use the selected predictors throughout the investigation
-colList = [allCols[x] for x in chisq_model.stages[-1].selectedFeatures]
-
-# Format the selected features so that they are neatly presented
-pd.DataFrame (colList, columns = ['Selected Features'], index=None).style.set_caption('Chi-Squared feature selection')
-```
-<img width="160" alt="Screenshot 2024-09-03 at 4 50 47 PM" src="https://github.com/user-attachments/assets/f5498edf-b685-495a-9847-82c376c79344">
-
-<dl>
-<dt>Feature Importance</dt> 
-<dd>Feature Importance is plotted using the Gradient Boosted Trees Classifier.</dd>
-</dl>
-
-Here we see the best predictor for getting a covid vaccination in 2021 (when the vaccine was initially released) is simply the week of the year.  During that year, the more widely available the vaccine became, the more people were getting it.  Maybe what is more notable is that other factors such as education, race, and geographic location were not as siginificant during that time.
-
-```python
-# Feature Importances
-vals = gbt_pipelineModel.stages[-1].featureImportances.indices
-arr  = gbt_pipelineModel.stages[-1].featureImportances.toArray()
-
-pd.DataFrame([(colList[f],arr[f]) for f in vals], index=[colList[f] for f in vals])[[1]] \
-         .sort_values(by=1, ascending=True) \
-         .plot(kind='barh', title='Gradient Boosted Trees\nFeature Importances', legend=False)
-plt.show()
-```
-
-<img width="645" alt="Screenshot 2024-09-03 at 4 48 52 PM" src="https://github.com/user-attachments/assets/83511ae2-765f-4a23-9cdd-c83350af3754">
 
 
 
