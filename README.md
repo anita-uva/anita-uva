@@ -300,7 +300,7 @@ Need to create a better example than I have existing...
 Some of my favorite work is improving the scalability and processes for EDA.  And I love to discover what the data has to say!
 
 ### Data Transformation
-Data transformation takes on different meanings.  For example, Survey data might be better represented as a text-based, readable scale of values for better understanding, as opposed to a numeric 1-5 kind of scale.  But, we might also change the values of the data to exist within a known distribution, or to be changed to the same scale as other variables.
+Data transformation takes on different meanings.  For example, Survey data might be better represented as a text-based, readable scale of values for better understanding, as opposed to a numeric 1-5 kind of scale.  But, we might also normalize the values to exist within a known distribution, or change them to use the same scale as other variables.
 
 Here are a couple of snippets showing data transformation.
 
@@ -328,7 +328,6 @@ def set_pct_values(np_series_vals):
     for x in myarr:
         if x in valdict.keys():
             continue
-        `
         if str(x) in lth:
             valdict[x]= 'Less Than Half'
         elif str(x) in mth:
@@ -375,7 +374,7 @@ workingdf.sample(15).T
 <img width="742" alt="Screenshot 2024-09-03 at 11 50 28 AM" src="https://github.com/user-attachments/assets/13dc1755-5bef-4646-8abf-d8a4efba5422">
 
 #### Data Normalization & Standardization
-In some instances, placing data will need to be placed on the same scale or normalized to an expected distribution.
+In some instances, data will need to be placed on the same scale, or normalized to an expected distribution.
 
 <dl>
 <dt>Transform data Values</dt> 
@@ -446,10 +445,10 @@ plt.legend()
 
 
 ### Dimensionality Reduction & Feature Importance
-Discovering the most influential features in a data set, and exploring the topics in unstructured data contribute to presenting the initial understanding of an unknown data set.
+Discovering the most influential features in a data set, and exploring the topics in unstructured data, contribute to the initial understanding of an unknown data set.
 
 #### Chi-Squared feature selection in pyspark
-For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the vaccine or not.  The data was reduced from a few hundred features to ten predictors.
+For survey data I chose to use the Chi Squared selector to see the best features to predict a binary response to whether a respondent had recieved the COVID-19 vaccine or not.  The data was reduced from a few hundred features to ten predictors.
 
 ```python
 from pyspark.ml.feature import ChiSqSelector, VectorAssembler, StringIndexer, VectorIndexer
@@ -502,14 +501,13 @@ plt.show()
 #### Principal Components Analysis (PCA)
 Reducing Dimensionality with PCA comes with the added benefit of uncorrelating highly correlated features.  Always the tradeoff with PCA is the relative difficulty in explaining that the data has changed to summary linear combinations of the original, while the variablility remains.
 
-This snippet of a Principal Components analysis is evaluating the predictive ability of survey data for the target feature "income", which is on a categorical scale of "High Medium or Low".
+This snippet of a Principal Components analysis is evaluating the predictive ability of survey data for the target feature "income", which is on a categorical scale of "High, Medium, or Low".
 
 ```python
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-## This code was slightly modified from its original state.  
-## The original code can be found here:
+## This code is templated from the following article:  
 ## https://www.reneshbedre.com/blog/principal-component-analysis.html
 
 # Prepare continuous variables from gss_clean
@@ -676,7 +674,10 @@ mylda_r, myvect_r, topics_r = get_lda_word_model(corpusr, min_df, max_df, n_voca
 
 
 ### Discovery EDA
-The best way to discover the underpinnings of a data set is with some straight-forward, easily understandable summary statistics, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, to the way nulls or otherwise missing values are recorded, and even more.
+The best way to discover the underpinnings of a data set is with some straight-forward, easily understandable summary statistics peppered with some creativity, such as sentiment analysis.
+
+<!--, which can tell us anything from data imbalances, to population biases, to typical value ranges for variables, to consistency or inconsistency of text based fields, to relationships between variables, to the way nulls or otherwise missing values are recorded, and even more.
+-->
 
 #### Bar Chart showing Data Imbalance
 This bar chart shows how the selected outcome variable distribution changes over scope of time, by week.
@@ -705,7 +706,7 @@ plt.show()
 <img width="628" alt="Screenshot 2024-09-04 at 2 38 20 PM" src="https://github.com/user-attachments/assets/cc76934b-31b2-4eb5-9fa3-b7e786617668">
 
 #### RoBERTa Sentiment Analysis as EDA
-In this snippet, I use a pre-trained RoBERTa model to classify article headlines and article text, separately, as Negative, Neutral, or Positive.  The dataset being processed by RoBERTa is comprised of articles that have been labeled with a bias of Left, Center, or Right.  
+In this snippet, I use a pre-trained RoBERTa model from huggingface.com to classify article headlines and article text, separately, as Negative, Neutral, or Positive.  The dataset being processed by RoBERTa is comprised of articles that have been labeled with a bias of Left, Center, or Right.  
 
 The goal of this EDA step is to gain an understanding of negativity and positivity by media bias.
 
@@ -773,7 +774,7 @@ _=adplot.plot(kind='bar', figsize=(20,5), title="Article Text", color=['burlywoo
 <dd>Consider the following points with the RoBERTa Sentiment Analysis results.</dd>
 </dl>
 
-* We see positivity is consistently the lowest sentiment, regardless of bias. And while it ranks much higher than positivity, negativity is always the second highest sentiment. Surprisingly, neutral is always the highest ranking sentiment for every bias.
+* We see positivity is consistently the lowest sentiment, regardless of bias. While negativity is always the second highest sentiment. Neutral is always the highest ranking sentiment for every bias.
   
 * When comparing headlines and article texts, we see that positive sentiment for headlines is always ranked below 10%, whereas article texts exhibit more positivity (over 10% in every case) within the article itself. It seems that headlines may be less positive than the article content.
   
@@ -821,7 +822,7 @@ The boxplots reveal outliers, as well as the scale of the data.  An interesting 
 [Full Exploratory Analysis on Wine Data](./Exploratory_Wine_Dataset.html)
 
 ### Multicollinearity
-Regression is sensitive to the independent variables being correlated with each other. Here we see an indicator of multicolliniarity through a Person's test.  A follow on activity would be to review the Variance Inflation Factor (VIF) for each highly correlated pair or to run a Principal Components Analysis to create an uncorrelated set of features from the original.
+Regression is sensitive to the independent variables being correlated with each other. Here we see an indicator of multicolliniarity through a Person's test.  A follow-on activity would be to review the Variance Inflation Factor (VIF) for each highly correlated pair or to run a Principal Components Analysis to create an uncorrelated set of features from the original.
 
 Review the Pearson's test for indications of highly correlated pairs.
 
