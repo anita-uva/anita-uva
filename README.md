@@ -152,7 +152,7 @@ fig = go.Figure(data   = traces,
                 layout = dict(updatemenus = updatemenus))
 ```
 
-[Interactive Map Code](./)
+[Interactive Map Code](./plotly-mapbox-choropleth.py)
 
 ## Data Collection and Cleaning
 I am particularly interested in Data Cleaning, Collection and Exploratory Data Analysis.
