@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 ## Uncomment this section to run the code locally, in Spyder ##
 ## Review Renders at:  https://plotly.com/python/renderers/
 ##
@@ -110,9 +109,6 @@ import dash
 
 from dash import dcc
 from dash import html
-
-
-import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
