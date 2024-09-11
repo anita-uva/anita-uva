@@ -1,5 +1,5 @@
 # Data Science and Analytics
-Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's degree in Data Science from The University of Virginia. After taking a vital two-year break to focus on personal recovery following the unexpected passing of my husband, I am eager to apply my expertise to meaningful projects, so I am pursuing initiatives in research and academia.
+Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's degree in Data Science from The University of Virginia. After taking an essential two-year break to focus on personal recovery following the unexpected passing of my husband, I am eager to apply my expertise to meaningful projects, so I am pursuing initiatives in research and academia.
 
 With a solid foundation in Python and SQL, exposure to Data Pipelines, and enthusiasm for machine learning,  my portfolio showcases a broad selection of work, highlighting my ability to deliver data-driven insights and innovative solutions.
 
