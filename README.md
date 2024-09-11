@@ -93,6 +93,16 @@ buildwc(maskfile = 'virusshape.jpg')
 ```
 <img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
+### Interactive Maps
+<dl>
+<dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
+<dd>Investigating attitides toward climate change combined with voting data</dd>
+<dd>County by County</dd>
+</dl>
+
+![ClimateChangeAttitudesDemo](https://github.com/user-attachments/assets/29bcdca7-8a08-42e9-9f7b-72515e51e2ab)
+
+
 
 ## Data Collection and Cleaning
 I am particularly interested in Data Cleaning, Collection and Exploratory Data Analysis.
