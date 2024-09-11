@@ -5,7 +5,7 @@ With a solid foundation in Python and SQL, exposure to Data Pipelines, and enthu
 
 * Right click any graphic and open in a new tab to see a larger view.  
 * Click on the code to enable scrolling to the right.
-* Use the back button to return to the portfolio after following a link.
+* Use the browser's back button to return to the portfolio after following a link.
 
 Thank you for visiting my portfolio. I look forward to connecting and exploring how my skills and experiences can contribute to impactful data science initiatives.
 
