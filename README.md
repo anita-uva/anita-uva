@@ -4,7 +4,7 @@ Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's 
 With a solid foundation in Python and SQL, exposure to Data Pipelines, and enthusiasm for machine learning,  my portfolio showcases a broad selection of work, highlighting my ability to deliver data-driven insights and innovative solutions.
 
 * Right click any graphic and open in a new tab to see a larger view.  
-* Click on the code to enable scrolling to the right for further reading.
+* Click on the code to enable scrolling to the right.
 * Use the back button to return to the portfolio after following a link.
 
 Thank you for visiting my portfolio. I look forward to connecting and exploring how my skills and experiences can contribute to impactful data science initiatives.
