@@ -1,9 +1,12 @@
 # Data Science and Analytics
-Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's degree in Data Science from The University of Virginia. After taking a vital two-year break to focus on personal recovery following the unexpected passing of my husband, I am eager to apply my expertise to meaningful projects, so I am pursuing research initiatives.
+Hi, I'm Anita Taucher, a career software engineer with a recent (2022) Master's degree in Data Science from The University of Virginia. After taking a vital two-year break to focus on personal recovery following the unexpected passing of my husband, I am eager to apply my expertise to meaningful projects, so I am pursuing initiatives in research and academia.
 
 With a solid foundation in Python and SQL, exposure to Data Pipelines, and enthusiasm for machine learning,  my portfolio showcases a broad selection of work, highlighting my ability to deliver data-driven insights and innovative solutions.
 
 Thank you for visiting my portfolio. I look forward to connecting and exploring how my skills and experiences can contribute to impactful data science initiatives.
+
+* Right click any graphic and open in a new tab to see a larger view.  
+* Click on the code to enable scrolling to the right for further reading.
 
 
 * TOC
@@ -93,16 +96,63 @@ buildwc(maskfile = 'virusshape.jpg')
 ```
 <img width="407" alt="Screenshot 2024-09-04 at 2 11 26 PM" src="https://github.com/user-attachments/assets/387f8138-9793-4930-b6bc-c9c0de3ac74e">
 
-### Interactive Maps
+### Geospatial Interactive Choropleth
+This interactive map enables users to compare survey data with political voting data at the county level across the U.S. By selecting a variable of interest, users can hover over counties to dynamically explore the relationship between that variable's acceptance level and voting percentages in each region.
+
 <dl>
-<dt>Survey Data:  US Census Bureau, Household Pulse Survey</dt>
-<dd>Investigating attitides toward climate change combined with voting data</dd>
+<dt>Survey Data:  The Yale Program on Climate Change Communications</dt>
+<dd>Investigating attitides toward climate change combined with 2016 Voting data</dd>
 <dd>County by County</dd>
 </dl>
 
+This map was written in Python with Plotly Graph Objects and rendered with Dash.  It was originally deployed in Heroku for public access, but that free account has since lapsed.  The graph can also be run locally, as it was in the following demo.
+
 ![ClimateChangeAttitudesDemo](https://github.com/user-attachments/assets/29bcdca7-8a08-42e9-9f7b-72515e51e2ab)
 
+This snippet of code is the map creation code.
+```python
+# Use "traces" to create a map for each column item in the options_list
+# Use "buttons" to handle the action for each list item
+traces = []
+buttons = []
 
+# Use "varchoice" to store the chosen list item name
+for varchoice in options_list:
+    
+    ## Add a new trace for each item in the options list
+    traces.append(go.Choroplethmapbox(
+        geojson=counties, 
+        locations=df.fips, # Spatial coordinates
+        z=df[varchoice],   # Data to be color-coded
+        colorscale="viridis", zmin=0, zmax=100,
+        marker_opacity=0.5, marker_line_width=0, 
+        colorbar_title=varchoice.title(),
+        name=varchoice.title(),
+        customdata = df[['GeoName','PopDensity','democrat_votes','republican_votes']],
+        hovertemplate='%{customdata[0]}<br><br>' +
+        'Population Density: %{customdata[1]:,.2f} /sq. mile<br>' +
+        '2016 Democrat Votes: %{customdata[2]:,}<br>' +
+        '2016 Republican Votes: %{customdata[3]:,}<br>' +                                    
+        '<extra>%{fullData.name}: %{z:.1f}%</extra>',        
+        visible = True if varchoice==options_list[0] else False))
+
+    ## Add a button for each trace
+    buttons.append(dict(label  = varchoice.title(),
+                        method = "update",
+                        args   =[ { "visible" : list(visible == varchoice)},
+
+                                  { "title"   : f"<b>{varchoice.title()}</b><br><sub>{subtitles.loc[varchoice][0]}</sub>"     } ]))
+## Track which list item is active
+## And the action to take (buttons) when active
+updatemenus = [ { "active" : 0, "buttons" : buttons, } ]
+
+## The Figure Object brings together the "data" in the form of maps
+## And the list items, in the form of buttons, which are stored in updatemenus
+fig = go.Figure(data   = traces,
+                layout = dict(updatemenus = updatemenus))
+```
+
+[Interactive Map Code](./)
 
 ## Data Collection and Cleaning
 I am particularly interested in Data Cleaning, Collection and Exploratory Data Analysis.
